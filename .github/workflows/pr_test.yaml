@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Config Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar packages
+        run: npm ci
+
+      - name: Run tests and enforce coverage threshold
+        run: |
+          npx jest --coverage --watchAll=false --ci \
+          --coverageThreshold='{
+            "global": {
+              "branches": 80,
+              "functions": 85,
+              "lines": 85,
+              "statements": 85
+            }
+          }'
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
