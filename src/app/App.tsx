@@ -1,6 +1,12 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from '../shared/routes';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from './theme';
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
