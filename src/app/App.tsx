@@ -4,5 +4,9 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from './theme';
 
 export default function App() {
-  return <ThemeProvider theme={theme}><RouterProvider router={router} /></ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }

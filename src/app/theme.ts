@@ -3,13 +3,13 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#7C3AED',     // Roxo vibrante principal
-      light: '#A78BFA',    // Roxo claro para hover/destaques
-      dark: '#5B21B6',     // Roxo escuro
+      main: '#7C3AED', // Roxo vibrante principal
+      light: '#A78BFA', // Roxo claro para hover/destaques
+      dark: '#5B21B6', // Roxo escuro
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#F472B6',     // Rosa vibrante para contraste criativo
+      main: '#F472B6', // Rosa vibrante para contraste criativo
       light: '#FBCFE8',
       dark: '#BE185D',
       contrastText: '#FFFFFF',
@@ -21,11 +21,11 @@ export const theme = createTheme({
       main: '#F59E0B',
     },
     background: {
-      default: '#F9FAFB',  // Neutro claro
-      paper: '#FFFFFF',    // Fundo para cards
+      default: '#F9FAFB', // Neutro claro
+      paper: '#FFFFFF', // Fundo para cards
     },
     text: {
-      primary: '#111827',  // Texto escuro
+      primary: '#111827', // Texto escuro
       secondary: '#6B7280', // Texto secundário
     },
   },
