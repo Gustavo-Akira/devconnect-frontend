@@ -55,3 +55,5 @@ export const theme = createTheme({
     borderRadius: 12,
   },
 });
+
+export type ThemeType = typeof theme;
