@@ -43,14 +43,6 @@ export const HomePage = () => {
   return (
     <>
       <Box
-        sx={{
-          bgcolor: 'background.default',
-          color: 'text.primary',
-          py: 4,
-          textAlign: 'center',
-        }}
-      />
-      <Box
         component="section"
         sx={{
           py: 8,
