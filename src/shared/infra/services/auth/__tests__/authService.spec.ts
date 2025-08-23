@@ -1,7 +1,7 @@
 import { signup } from '../authService';
 import { api } from '../../../api';
 import type { SignupRequest } from '../types';
-import {vi, type Mock} from 'vitest';
+import { vi, type Mock } from 'vitest';
 
 vi.mock('../../../api', () => ({
   api: {

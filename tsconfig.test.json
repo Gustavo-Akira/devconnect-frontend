@@ -3,7 +3,14 @@
   "compilerOptions": {
     "outDir": "./dist-test",
     "rootDir": "./",
-    "types": ["jest", "node", "jsdom","@testing-library/jest-dom","@testing-library/react","vite/client"],
+    "types": [
+      "jest",
+      "node",
+      "jsdom",
+      "@testing-library/jest-dom",
+      "@testing-library/react",
+      "vite/client"
+    ],
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "nodenext",
     "jsx": "react-jsx",

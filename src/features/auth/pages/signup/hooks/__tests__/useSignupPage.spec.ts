@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useSignupPage } from '../useSignupPage';
 import { signup } from '../../../../../../shared/infra/services/auth/authService';
 import type { FormData } from '../../interface';
-import {vi, type Mock} from 'vitest';
+import { vi, type Mock } from 'vitest';
 vi.mock('../../../../../../shared/infra/services/auth/authService', () => ({
   signup: vi.fn(),
 }));

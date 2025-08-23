@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AccountStep } from '../';
-import {vi} from 'vitest';
+import { vi } from 'vitest';
 
 describe('AccountStep', () => {
   const mockOnChange = vi.fn();
