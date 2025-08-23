@@ -35,15 +35,6 @@ export const AddressStep = ({ onChange, data }: FormStepProps) => {
         <Grid size={{ xs: 6, sm: 6 }}>
           <TextField
             fullWidth
-            value={data.neighborhood}
-            label="Bairro"
-            onChange={(e) => onChange('neighborhood', e.target.value)}
-            required
-          />
-        </Grid>
-        <Grid size={{ xs: 6, sm: 6 }}>
-          <TextField
-            fullWidth
             value={data.state}
             label="Estado"
             onChange={(e) => onChange('state', e.target.value)}
@@ -59,7 +50,7 @@ export const AddressStep = ({ onChange, data }: FormStepProps) => {
             required
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 12 }}>
+        <Grid size={{ xs: 6, sm: 6 }}>
           <TextField
             fullWidth
             value={data.zipCode}

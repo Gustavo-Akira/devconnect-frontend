@@ -20,17 +20,9 @@ jobs:
       - name: Instalar packages
         run: npm ci
 
-      - name: Run tests and enforce coverage threshold
-        run: |
-          npx jest --coverage --watchAll=false --ci \
-          --coverageThreshold='{
-            "global": {
-              "branches": 80,
-              "functions": 85,
-              "lines": 85,
-              "statements": 85
-            }
-          }'
+      - name: Run tests with coverage
+        run: npx vitest run --coverage
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:

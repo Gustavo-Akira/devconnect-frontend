@@ -1,8 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AccountStep } from '../';
+import { vi } from 'vitest';
 
 describe('AccountStep', () => {
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
   const defaultData = {
     name: 'Gustavo',
     email: 'gustavo@example.com',

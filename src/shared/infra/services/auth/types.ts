@@ -1,11 +1,8 @@
-export interface SignupRequest {
+export type SignupRequest = {
   name: string;
   email: string;
   password: string;
-  address: string;
-  number: string;
-  complement?: string;
-  neighborhood: string;
+  street: string;
   city: string;
   state: string;
   zipCode: string;
@@ -13,5 +10,5 @@ export interface SignupRequest {
   githubLink: string;
   linkedinLink: string;
   bio: string;
-  stack: Array<string>;
-}
+  stack: string[];
+};

@@ -28,7 +28,7 @@ export const DevInfoStep = ({ onChange, data }: FormStepProps) => {
         onChange={(e) =>
           onChange(
             'stack',
-            e.target.value.split(', ').map((item) => item.trim()),
+            e.target.value.split(',').map((item) => item.trim()),
           )
         }
         required

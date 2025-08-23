@@ -1,8 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AddressStep } from '../';
+import { vi } from 'vitest';
 
 describe('AddressStep', () => {
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
   const defaultData = {
     address: 'Rua das Acácias',
     city: 'São Paulo',
@@ -31,7 +32,6 @@ describe('AddressStep', () => {
     expect(screen.getByLabelText(/Rua/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Cidade/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Número/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Bairro/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Estado/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/CEP/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/País/i)).toBeInTheDocument();
@@ -43,7 +43,6 @@ describe('AddressStep', () => {
     expect(screen.getByLabelText(/Rua/i)).toHaveValue('Rua das Acácias');
     expect(screen.getByLabelText(/Cidade/i)).toHaveValue('São Paulo');
     expect(screen.getByLabelText(/Número/i)).toHaveValue('123');
-    expect(screen.getByLabelText(/Bairro/i)).toHaveValue('Centro');
     expect(screen.getByLabelText(/Estado/i)).toHaveValue('SP');
     expect(screen.getByLabelText(/CEP/i)).toHaveValue('01234-567');
     expect(screen.getByLabelText(/País/i)).toHaveValue('Brasil');
@@ -66,11 +65,6 @@ describe('AddressStep', () => {
       target: { value: '456' },
     });
     expect(mockOnChange).toHaveBeenCalledWith('number', '456');
-
-    fireEvent.change(screen.getByLabelText(/Bairro/i), {
-      target: { value: 'Jardins' },
-    });
-    expect(mockOnChange).toHaveBeenCalledWith('neighborhood', 'Jardins');
 
     fireEvent.change(screen.getByLabelText(/Estado/i), {
       target: { value: 'RJ' },
