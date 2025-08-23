@@ -3,13 +3,16 @@ import { ThemeProvider } from '@emotion/react';
 import { Header } from '../index';
 import { theme } from '../../../../app/theme';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Header Component', () => {
   it('should toggle the navigation menu on mobile view when the header is clicked', async () => {
     render(
-      <ThemeProvider theme={theme}>
-        <Header />
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <Header />
+        </ThemeProvider>,
+      </MemoryRouter>
     );
 
     const headerContainer = screen.getByRole('header');
@@ -20,9 +23,11 @@ describe('Header Component', () => {
 
   it('should display navigation links', () => {
     render(
-      <ThemeProvider theme={theme}>
-        <Header />
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <Header />
+        </ThemeProvider>,
+      </MemoryRouter>
     );
 
     expect(screen.getByText('Signin')).toBeInTheDocument();
