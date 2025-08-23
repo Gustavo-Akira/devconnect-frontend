@@ -28,7 +28,9 @@ export const Header = () => {
               <NavLink href="#signin">Signin</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink onClick={()=>navigate(AUTH_PATHS.SIGNUP)}>Signup</NavLink>
+              <NavLink onClick={() => navigate(AUTH_PATHS.SIGNUP)}>
+                Signup
+              </NavLink>
             </NavItem>
           </NavList>
         </Nav>

@@ -11,8 +11,9 @@ describe('Header Component', () => {
       <MemoryRouter>
         <ThemeProvider theme={theme}>
           <Header />
-        </ThemeProvider>,
-      </MemoryRouter>
+        </ThemeProvider>
+        ,
+      </MemoryRouter>,
     );
 
     const headerContainer = screen.getByRole('header');
@@ -26,8 +27,9 @@ describe('Header Component', () => {
       <MemoryRouter>
         <ThemeProvider theme={theme}>
           <Header />
-        </ThemeProvider>,
-      </MemoryRouter>
+        </ThemeProvider>
+        ,
+      </MemoryRouter>,
     );
 
     expect(screen.getByText('Signin')).toBeInTheDocument();
