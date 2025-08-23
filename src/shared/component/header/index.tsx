@@ -8,9 +8,11 @@ import {
   Logo,
   HeaderContent,
 } from './styled';
-
+import { AUTH_PATHS } from '../../../features/auth/route';
+import { useNavigate } from 'react-router-dom';
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <HeaderContainer role="header" onClick={() => setMenuOpen(!menuOpen)}>
@@ -26,7 +28,9 @@ export const Header = () => {
               <NavLink href="#signin">Signin</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="#signup">Signup</NavLink>
+              <NavLink onClick={() => navigate(AUTH_PATHS.SIGNUP)}>
+                Signup
+              </NavLink>
             </NavItem>
           </NavList>
         </Nav>
