@@ -1,9 +1,10 @@
 // DevInfoStep.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import { DevInfoStep } from '../';
+import { vi } from 'vitest';
 
 describe('DevInfoStep', () => {
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
   const defaultData = {
     address: 'Rua das Acácias',
     city: 'São Paulo',

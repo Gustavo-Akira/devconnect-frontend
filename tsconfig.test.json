@@ -3,9 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist-test",
     "rootDir": "./",
-    "module": "CommonJS",
-    "types": ["jest", "node", "jsdom"],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "types": ["jest", "node", "jsdom","@testing-library/jest-dom","@testing-library/react","vite/client"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "nodenext",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src", "__mocks__", "src/shared/types", "tests"],
   "exclude": ["node_modules", "dist", "dist-test"]

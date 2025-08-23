@@ -6,59 +6,21 @@ import {
   Step,
   StepLabel,
 } from '@mui/material';
-import { useState } from 'react';
 import { AccountStep } from './components/accountStep';
 import { AddressStep } from './components/addressStep';
 import { DevInfoStep } from './components/devInfoStep';
+import { useSignupPage } from './hooks/useSignupPage';
 
 export const Signup = () => {
-  const steps = ['Informações Pessoais', 'Dados de Acesso', 'Confirmação'];
-  const [activeStep, setActiveStep] = useState(0);
-  const handleNext = () => setActiveStep((prev) => prev + 1);
-  const handleBack = () => setActiveStep((prev) => prev - 1);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    address: '',
-    number: '',
-    complement: '',
-    neighborhood: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: '',
-    githubLink: '',
-    linkedinLink: '',
-    bio: '',
-    stack: [],
-    confirmPassword: '',
-  });
-  const renderStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return <AccountStep onChange={() => {}} data={formData} />;
-      case 1:
-        return (
-          <AddressStep
-            onChange={(field, value) =>
-              setFormData({ ...formData, [field]: value })
-            }
-            data={formData}
-          />
-        );
-      case 2:
-        return (
-          <DevInfoStep
-            onChange={(field, value) =>
-              setFormData({ ...formData, [field]: value })
-            }
-            data={formData}
-          />
-        );
-      default:
-        return 'Unknown step';
-    }
+  const { actions, state } = useSignupPage();
+  const { formData, steps, activeStep } = state;
+  const { setFormData, handleBack, handleNext, handleSignup } = actions;
+
+  const stepComponents = [AccountStep, AddressStep, DevInfoStep];
+  const CurrentStepComponent = stepComponents[activeStep];
+
+  const handleStepChange = (field: string, value: string | string[]) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   return (
@@ -78,7 +40,10 @@ export const Signup = () => {
         <Container maxWidth="sm">
           <form method="post">
             <Box display="flex" flexDirection="column" gap={2}>
-              {renderStepContent(activeStep)}
+              <CurrentStepComponent
+                data={formData}
+                onChange={handleStepChange}
+              />
             </Box>
           </form>
           <Box display="flex" justifyContent="space-between" mt={4}>
@@ -86,7 +51,11 @@ export const Signup = () => {
               Voltar
             </Button>
             {activeStep === steps.length - 1 ? (
-              <Button variant="contained" color="primary" onClick={() => {}}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSignup}
+              >
                 Finalizar
               </Button>
             ) : (

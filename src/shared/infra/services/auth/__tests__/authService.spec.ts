@@ -1,12 +1,11 @@
-// signup.test.ts
 import { signup } from '../authService';
 import { api } from '../../../api';
 import type { SignupRequest } from '../types';
+import {vi, type Mock} from 'vitest';
 
-// Faz o mock do api
-jest.mock('../../../api', () => ({
+vi.mock('../../../api', () => ({
   api: {
-    post: jest.fn(),
+    post: vi.fn(),
   },
 }));
 
@@ -15,10 +14,7 @@ describe('signup', () => {
     name: 'Gustavo',
     email: 'gustavo@example.com',
     password: '123456',
-    address: '123 Main St',
-    number: '456',
-    complement: 'Apt 789',
-    neighborhood: 'Downtown',
+    street: '123 Main St, 123',
     city: 'Metropolis',
     state: 'NY',
     zipCode: '12345',
@@ -30,19 +26,19 @@ describe('signup', () => {
   };
 
   it('deve chamar o endpoint correto com os dados de request', async () => {
-    (api.post as jest.Mock).mockResolvedValueOnce({ data: { success: true } });
+    (api.post as Mock).mockResolvedValueOnce({ data: { success: true } });
 
     const result = await signup(mockRequest);
 
-    expect(api.post).toHaveBeenCalledWith('/api/auth/signup', mockRequest);
+    expect(api.post).toHaveBeenCalledWith('v1/dev-profiles', mockRequest);
     expect(result).toEqual({ success: true });
   });
 
   it('deve lançar erro quando a requisição falhar', async () => {
     const mockError = new Error('Request failed');
-    (api.post as jest.Mock).mockRejectedValueOnce(mockError);
+    (api.post as Mock).mockRejectedValueOnce(mockError);
 
     await expect(signup(mockRequest)).rejects.toThrow('Request failed');
-    expect(api.post).toHaveBeenCalledWith('/api/auth/signup', mockRequest);
+    expect(api.post).toHaveBeenCalledWith('v1/dev-profiles', mockRequest);
   });
 });

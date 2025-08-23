@@ -8,8 +8,6 @@ export type FormData = {
   password: string;
   address: string;
   number: string;
-  complement?: string;
-  neighborhood: string;
   city: string;
   state: string;
   zipCode: string;
@@ -17,7 +15,7 @@ export type FormData = {
   githubLink: string;
   linkedinLink: string;
   bio: string;
-  stack: Array<string>;
+  stack: string[];
   confirmPassword: string;
 };
 
