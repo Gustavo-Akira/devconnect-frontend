@@ -1,4 +1,4 @@
-import { signup } from '../authService';
+import { signin, signup } from '../authService';
 import { api } from '../../../api';
 import type { SignupRequest } from '../types';
 import { vi, type Mock } from 'vitest';
@@ -40,5 +40,34 @@ describe('signup', () => {
 
     await expect(signup(mockRequest)).rejects.toThrow('Request failed');
     expect(api.post).toHaveBeenCalledWith('v1/dev-profiles', mockRequest);
+  });
+});
+
+describe('signin', () => {
+  const mockEmail = 'email@email.com';
+
+  const mockPassword = '123456';
+
+  it('deve chamar o endpoint correto com os dados de email e password', async () => {
+    (api.post as Mock).mockResolvedValueOnce({ data: { token: 'abc123' } });
+    const result = await signin(mockEmail, mockPassword);
+    expect(api.post).toHaveBeenCalledWith('v1/auth/signin', {
+      email: mockEmail,
+      password: mockPassword,
+    });
+    expect(result).toEqual({ token: 'abc123' });
+  });
+
+  it('deve lançar erro quando a requisição falhar', async () => {
+    const mockError = new Error('Request failed');
+    (api.post as Mock).mockRejectedValueOnce(mockError);
+
+    await expect(signin(mockEmail, mockPassword)).rejects.toThrow(
+      'Request failed',
+    );
+    expect(api.post).toHaveBeenCalledWith('v1/auth/signin', {
+      email: mockEmail,
+      password: mockPassword,
+    });
   });
 });

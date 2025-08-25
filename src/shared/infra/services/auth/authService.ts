@@ -11,3 +11,13 @@ export const signup = async (request: SignupRequest) => {
     throw error;
   }
 };
+
+export const signin = async (email: string, password: string) => {
+  try {
+    const { data } = await api.post('v1/auth/signin', { email, password });
+    return data;
+  } catch (error) {
+    console.error('Error during signin:', error);
+    throw error;
+  }
+};
