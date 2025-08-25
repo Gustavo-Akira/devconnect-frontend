@@ -14,7 +14,11 @@ export const signup = async (request: SignupRequest) => {
 
 export const signin = async (email: string, password: string) => {
   try {
-    const { data } = await api.post('v1/auth/signin', { email, password });
+    const { data } = await api.post('v1/auth/login', {
+      username: email,
+      password,
+      grantType: 'password',
+    });
     return data;
   } catch (error) {
     console.error('Error during signin:', error);

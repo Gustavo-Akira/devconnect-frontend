@@ -51,9 +51,10 @@ describe('signin', () => {
   it('deve chamar o endpoint correto com os dados de email e password', async () => {
     (api.post as Mock).mockResolvedValueOnce({ data: { token: 'abc123' } });
     const result = await signin(mockEmail, mockPassword);
-    expect(api.post).toHaveBeenCalledWith('v1/auth/signin', {
-      email: mockEmail,
+    expect(api.post).toHaveBeenCalledWith('v1/auth/login', {
+      username: mockEmail,
       password: mockPassword,
+      grantType: 'password',
     });
     expect(result).toEqual({ token: 'abc123' });
   });
@@ -65,9 +66,10 @@ describe('signin', () => {
     await expect(signin(mockEmail, mockPassword)).rejects.toThrow(
       'Request failed',
     );
-    expect(api.post).toHaveBeenCalledWith('v1/auth/signin', {
-      email: mockEmail,
+    expect(api.post).toHaveBeenCalledWith('v1/auth/login', {
+      username: mockEmail,
       password: mockPassword,
+      grantType: 'password',
     });
   });
 });

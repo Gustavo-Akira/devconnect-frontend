@@ -1,6 +1,8 @@
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { useSigninPage } from './hooks/useSigninPage';
 
 export const SignIn = () => {
+  const { actions, state } = useSigninPage();
   return (
     <>
       <Box>
@@ -13,13 +15,30 @@ export const SignIn = () => {
           <Container maxWidth="sm">
             <form method="post">
               <Box display="flex" flexDirection="column" gap={2}>
-                <TextField label="Email" />
-                <TextField label="Senha" />
+                <TextField
+                  name="email"
+                  onChange={(e) => actions.setEmail(e.target.value)}
+                  label="Email"
+                />
+                <TextField
+                  type="password"
+                  name="password"
+                  onChange={(e) => actions.setPassword(e.target.value)}
+                  label="Senha"
+                />
+                <Typography color="error">{state.error}</Typography>
               </Box>
             </form>
             <Box display="flex" justifyContent="space-between" mt={4}>
-              <Button onClick={() => {}}>Esqueci minha senha</Button>
-              <Button variant="contained" color="primary" onClick={() => {}}>
+              <Button onClick={actions.handleForgotPassword}>
+                Esqueci minha senha
+              </Button>
+              <Button
+                loading={state.loading}
+                variant="contained"
+                color="primary"
+                onClick={actions.handleSignIn}
+              >
                 Entrar
               </Button>
             </Box>
