@@ -24,7 +24,13 @@ export const Header = () => {
         >
           <NavList>
             <NavItem>
-              <NavLink href="#signin">Signin</NavLink>
+              <NavLink
+                onClick={() => {
+                  router.navigate(AUTH_PATHS.SIGNIN);
+                }}
+              >
+                Signin
+              </NavLink>
             </NavItem>
             <NavItem>
               <NavLink onClick={() => router.navigate(AUTH_PATHS.SIGNUP)}>
