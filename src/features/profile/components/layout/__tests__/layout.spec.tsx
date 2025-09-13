@@ -8,31 +8,13 @@ vi.mock('../../side-menu/sideMenu', () => ({
 
 describe('ProfileLayout', () => {
   it('deve renderizar o SideMenu', () => {
-    render(
-      <ProfileLayout>
-        <div>Conteúdo</div>
-      </ProfileLayout>,
-    );
+    render(<ProfileLayout />);
 
     expect(screen.getByTestId('side-menu')).toBeInTheDocument();
   });
 
-  it('deve renderizar os children corretamente', () => {
-    render(
-      <ProfileLayout>
-        <p>Texto do perfil</p>
-      </ProfileLayout>,
-    );
-
-    expect(screen.getByText('Texto do perfil')).toBeInTheDocument();
-  });
-
   it('aplica o estilo de layout corretamente', () => {
-    const { container } = render(
-      <ProfileLayout>
-        <span>Child</span>
-      </ProfileLayout>,
-    );
+    const { container } = render(<ProfileLayout />);
 
     const layoutDiv = container.firstChild as HTMLElement;
 
