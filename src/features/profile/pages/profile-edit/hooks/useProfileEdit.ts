@@ -16,7 +16,7 @@ export const useProfileEdit = () => {
       return;
     }
     setProfileData(user);
-  }, [user]);
+  }, [user, navigate]);
 
   const handleProfileUpdate = async () => {
     setLoading(true);
