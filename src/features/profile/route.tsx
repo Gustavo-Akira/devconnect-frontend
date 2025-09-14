@@ -3,6 +3,7 @@ import { ProfileLayout } from './components/layout/layout';
 import { PrivateRoute } from '../../shared/component/privateRoute';
 import { InfoPage } from './pages/information';
 import { AuthProvider } from '../../shared/context/auth/authContext';
+import { EditProfilePage } from './pages/profile-edit';
 
 export const PROFILE_PATHS = {
   PROFILE: '/profile',
@@ -22,6 +23,10 @@ export const PROFILE_ROUTE: RouteObject[] = [
       {
         path: '',
         element: <InfoPage />,
+      },
+      {
+        path: 'edit',
+        element: <EditProfilePage />,
       },
     ],
   },
