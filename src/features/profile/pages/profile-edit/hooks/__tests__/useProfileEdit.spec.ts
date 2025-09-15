@@ -5,6 +5,7 @@ import { useAuth } from '../../../../../../shared/context/auth/authContext';
 import { useNavigate } from 'react-router-dom';
 import { AUTH_PATHS } from '../../../../../auth/route';
 import type { User } from '../../../../../../shared/types/user';
+import * as profileService from '../../../../../../shared/infra/services/profile/profileService';
 
 vi.mock('../../../../../../shared/context/auth/authContext');
 vi.mock('react-router-dom', async () => {
@@ -102,16 +103,37 @@ describe('useProfileEdit', () => {
     expect(result.current.state.profileData?.name).toBe('John Doe');
   });
 
-  it('should set error when handleProfileUpdate is called', () => {
+  it('should call updateProfile and handle success', async () => {
     (useAuth as Mock).mockReturnValue({ user: mockUser });
+    const updateProfileMock = vi
+      .spyOn(profileService, 'updateProfile')
+      .mockResolvedValueOnce(mockUser);
 
     const { result } = renderHook(() => useProfileEdit());
 
-    act(() => {
-      result.current.actions.handleProfileUpdate();
+    await act(async () => {
+      await result.current.actions.handleProfileUpdate();
     });
 
-    expect(result.current.state.error).toBe('Not implemented yet');
+    expect(updateProfileMock).toHaveBeenCalled();
+    expect(result.current.state.error).toBeUndefined();
+    expect(result.current.state.loading).toBe(false);
+  });
+
+  it('should set error when updateProfile throws', async () => {
+    (useAuth as Mock).mockReturnValue({ user: mockUser });
+    const updateProfileMock = vi
+      .spyOn(profileService, 'updateProfile')
+      .mockRejectedValueOnce(new Error('Update failed'));
+
+    const { result } = renderHook(() => useProfileEdit());
+
+    await act(async () => {
+      await result.current.actions.handleProfileUpdate();
+    });
+
+    expect(updateProfileMock).toHaveBeenCalled();
+    expect(result.current.state.error).toBe('Update failed');
     expect(result.current.state.loading).toBe(false);
   });
 });

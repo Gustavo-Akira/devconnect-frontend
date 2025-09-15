@@ -158,6 +158,7 @@ export const EditProfilePage = () => {
               type="submit"
               variant="contained"
               color="primary"
+              loading={state.loading}
               onClick={actions.handleProfileUpdate}
             >
               Atualizar

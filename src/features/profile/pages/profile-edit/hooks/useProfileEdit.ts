@@ -3,6 +3,7 @@ import { useAuth } from '../../../../../shared/context/auth/authContext';
 import type { Address, User } from '../../../../../shared/types/user';
 import { useNavigate } from 'react-router-dom';
 import { AUTH_PATHS } from '../../../../auth/route';
+import { updateProfile } from '../../../../../shared/infra/services/profile/profileService';
 
 export const useProfileEdit = () => {
   const { user } = useAuth();
@@ -20,7 +21,24 @@ export const useProfileEdit = () => {
 
   const handleProfileUpdate = async () => {
     setLoading(true);
-    setError('Not implemented yet');
+    try {
+      await updateProfile({
+        id: profileData?.id ?? '',
+        name: profileData?.name ?? '',
+        email: profileData?.email ?? '',
+        street: profileData?.address.street ?? '',
+        city: profileData?.address.city ?? '',
+        zipCode: profileData?.address.zipCode ?? '',
+        state: profileData?.address.state ?? '',
+        country: profileData?.address.country ?? '',
+        githubLink: profileData?.githubLink ?? '',
+        linkedinLink: profileData?.linkedinLink ?? '',
+        bio: profileData?.bio ?? '',
+        stack: profileData?.stack ?? [],
+      });
+    } catch (error) {
+      setError((error as Error).message);
+    }
     setLoading(false);
   };
   const handleReset = () => {
