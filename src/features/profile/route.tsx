@@ -7,6 +7,7 @@ import { EditProfilePage } from './pages/profile-edit';
 
 export const PROFILE_PATHS = {
   PROFILE: '/profile',
+  PROFILE_EDIT: '/profile/edit',
 };
 
 export const PROFILE_ROUTE: RouteObject[] = [

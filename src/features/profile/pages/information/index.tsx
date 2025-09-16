@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Chip,
   Grid,
   Typography,
@@ -9,12 +10,22 @@ import {
 import { useAuth } from '../../../../shared/context/auth/authContext';
 import { InfoContainer } from '../../components/infoContainer';
 import { ExpandMore } from '@mui/icons-material';
+import { PROFILE_PATHS } from '../../route';
+import { useNavigate } from 'react-router-dom';
 
 export const InfoPage = () => {
   const { user } = useAuth();
   const userInfo = user!;
+  const navigate = useNavigate();
   return (
     <Grid container spacing={2}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate(PROFILE_PATHS.PROFILE_EDIT)}
+      >
+        Editar Informações
+      </Button>
       <Grid size={{ xs: 12 }}>
         <Accordion defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMore />}>

@@ -3,8 +3,17 @@ import { useAuth } from '../../../../../shared/context/auth/authContext';
 import { render, screen } from '@testing-library/react';
 import { InfoPage } from '..';
 
-vi.mock('../../../../../shared/context/auth/authContext', () => ({
-  useAuth: vi.fn(),
+vi.mock(
+  '../../../../../shared/context/auth/authContext',
+  async (importOriginal) => ({
+    ...(await importOriginal()),
+    useAuth: vi.fn(),
+  }),
+);
+
+vi.mock('react-router-dom', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useNavigate: () => vi.fn(),
 }));
 describe('Info Page Ui tests', () => {
   const user = {
