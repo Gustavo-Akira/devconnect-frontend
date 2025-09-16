@@ -19,7 +19,11 @@ export const InfoPage = () => {
   const navigate = useNavigate();
   return (
     <Grid container spacing={2}>
-      <Button variant="contained" color="primary" onClick={()=>navigate(PROFILE_PATHS.PROFILE_EDIT)}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate(PROFILE_PATHS.PROFILE_EDIT)}
+      >
         Editar Informações
       </Button>
       <Grid size={{ xs: 12 }}>
