@@ -2,10 +2,8 @@ import styled from '@emotion/styled';
 
 export const SideMenuContainer = styled.div`
   width: 250px;
-  border-right: 1px solid #ccc;
-  height: 90vh;
+  height: 100%;
   background-color: #f9f9f9;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 `;
 
 export const SideMenuProfileContainer = styled.div`
