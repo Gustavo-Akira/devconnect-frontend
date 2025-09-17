@@ -3,6 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { SideMenu } from '../sideMenu';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../../../../app/theme';
+import { PROFILE_PATHS } from '../../../route';
+import { vi } from 'vitest';
 
 const renderWithTheme = () => {
   return render(
@@ -11,36 +13,50 @@ const renderWithTheme = () => {
     </ThemeProvider>,
   );
 };
+
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async (actual) => ({
+  ...(await actual()),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('SideMenu', () => {
-  it('deve renderizar a imagem de perfil', () => {
+  it('should render profile image', () => {
     renderWithTheme();
     const img = screen.getByAltText('profileImage');
     expect(img).toHaveAttribute('src', '/src/shared/assets/images/profile.png');
     expect(img).toHaveStyle('border-radius: 100%');
   });
 
-  it('deve renderizar o nome do usuário', () => {
+  it('should render user name', () => {
     renderWithTheme();
     expect(screen.getByText('Gustavo Akira Uekita')).toBeInTheDocument();
   });
 
-  it('deve renderizar os links do menu', () => {
+  it('should render menu links', () => {
     renderWithTheme();
     expect(screen.getByText('Profile')).toBeInTheDocument();
     expect(screen.getByText('Projects')).toBeInTheDocument();
     expect(screen.getByText('Exit')).toBeInTheDocument();
   });
 
-  it('deve renderizar o icone do link de profile', () => {
+  it('should render account icon', () => {
     renderWithTheme();
     expect(screen.getByTitle('account')).toBeInTheDocument();
   });
-  it('deve renderizar o icone do link de profile', () => {
+  it('should render projects icon', () => {
     renderWithTheme();
     expect(screen.getByTitle('projects')).toBeInTheDocument();
   });
-  it('deve renderizar o icone do link de profile', () => {
+  it('should render exit icon', () => {
     renderWithTheme();
     expect(screen.getByTitle('exit')).toBeInTheDocument();
+  });
+
+  it("should call navigate function when 'Profile' link is clicked", () => {
+    renderWithTheme();
+    const profileLink = screen.getByText('Profile');
+    profileLink.click();
+    expect(mockNavigate).toHaveBeenCalledWith(PROFILE_PATHS.PROFILE);
   });
 });

@@ -7,8 +7,11 @@ import {
 } from './styled';
 import ProfileImage from '../../../../shared/assets/images/profile.png';
 import { AccountCircle, Book, ExitToAppSharp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { PROFILE_PATHS } from '../../route';
 
 export const SideMenu = () => {
+  const navigate = useNavigate();
   return (
     <SideMenuContainer>
       <SideMenuProfileContainer>
@@ -27,7 +30,7 @@ export const SideMenu = () => {
         <Typography variant="h5">Gustavo Akira Uekita</Typography>
       </SideMenuProfileContainer>
       <SideMenuNavBar>
-        <SideMenuLink>
+        <SideMenuLink onClick={() => navigate(PROFILE_PATHS.PROFILE)}>
           <AccountCircle titleAccess="account" />
           Profile
         </SideMenuLink>
