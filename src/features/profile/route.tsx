@@ -33,8 +33,8 @@ export const PROFILE_ROUTE: RouteObject[] = [
       },
       {
         path: 'projects',
-        element: <ProjectsPage />
-      }
+        element: <ProjectsPage />,
+      },
     ],
   },
 ];

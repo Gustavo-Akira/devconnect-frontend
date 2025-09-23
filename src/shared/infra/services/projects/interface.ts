@@ -1,14 +1,14 @@
 export type Project = {
-    id: string;
-    name: string;
-    description: string;
-    repoUrl: string;
-    owner: Owner;
-}
+  id: string;
+  name: string;
+  description: string;
+  repoUrl: string;
+  owner: Owner;
+};
 
 export type Owner = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 };
 
 interface ProjectResponse {

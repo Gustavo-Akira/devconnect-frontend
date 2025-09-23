@@ -7,14 +7,14 @@ export default defineConfig({
   test: {
     server: {
       deps: {
-        inline: ["@mui/x-data-grid"],
+        inline: ['@mui/x-data-grid'],
       },
     },
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.ts',
     css: true,
-    
+
     coverage: {
       reporter: ['text', 'lcov'],
       thresholds: {
