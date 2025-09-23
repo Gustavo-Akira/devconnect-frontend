@@ -6,37 +6,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import type { Project } from '../../../../shared/infra/services/projects/interface';
 import { Delete, Edit, GitHub } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { useProjectsPage } from './hooks/useProjectsPage';
 
 export const ProjectsPage = () => {
-  const rows: Project[] = [
-    {
-      id: '1',
-      name: 'Project One',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam egestas dignissim porttitor. Curabitur non hendrerit lacus, non consequat turpis. Duis quis posuere urna. Nulla sed est sed felis fringilla placerat ut nec turpis. Vivamus tincidunt eros massa, ut facilisis tortor tincidunt id. Pellentesque eu diam nulla. Phasellus at bibendum sem, quis finibus dui. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla eget luctus arcu. Etiam felis enim, feugiat sed mattis eget, ullamcorper ultricies nulla. Duis id felis at velit maximus fringilla. Praesent dignissim pellentesque commodo. Aliquam nec augue sit amet elit ornare fringilla. Integer elit justo, laoreet sed lorem nec, suscipit tincidunt turpis. Donec pellentesque semper tincidunt.',
-      repoUrl: 'https://www.github.com/Gustavo-Akira/devconnect',
-      owner: {
-        id: 'owner1',
-        name: 'Owner One',
-      },
-    },
-    {
-      id: '2',
-      name: 'Project Two',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam egestas dignissim porttitor. Curabitur non hendrerit lacus, non consequat turpis. Duis quis posuere urna. Nulla sed est sed felis fringilla placerat ut nec turpis. Vivamus tincidunt eros massa, ut facilisis tortor tincidunt id. Pellentesque eu diam nulla. Phasellus at bibendum sem, quis finibus dui. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla eget luctus arcu. Etiam felis enim, feugiat sed mattis eget, ullamcorper ultricies nulla. Duis id felis at velit maximus fringilla. Praesent dignissim pellentesque commodo. Aliquam nec augue sit amet elit ornare fringilla. Integer elit justo, laoreet sed lorem nec, suscipit tincidunt turpis. Donec pellentesque semper tincidunt.',
-      repoUrl: 'https://www.github.com/Gustavo-Akira/devconnect-frontend',
-      owner: {
-        id: 'owner1',
-        name: 'Owner One',
-      },
-    },
-  ];
-  const size = 5;
-  const page = 1;
+  const {state, actions} = useProjectsPage();
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
     { field: 'description', headerName: 'Description', flex: 2, minWidth: 250 },
@@ -84,10 +59,21 @@ export const ProjectsPage = () => {
       </Grid>
       <DataGrid
         columns={columns}
-        rows={rows}
+        rows={state.projects}
         paginationMode="server"
-        paginationModel={{ page, pageSize: size }}
-        rowCount={2}
+        paginationModel={{ page:state.page, pageSize: state.size }}
+        rowCount={state.totalElements}
+        onPaginationModelChange={(model) =>{
+          if(model.page !== state.page){
+            console.log(model.page);
+            actions.handlePageChange(model.page)
+          }
+          if(model.pageSize !== state.size){
+            console.log(model.pageSize);
+            actions.handleSizeChange(model.pageSize)
+          }
+        }}
+        loading={state.loading}
       />
     </Container>
   );
