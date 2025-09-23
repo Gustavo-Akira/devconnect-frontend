@@ -10,7 +10,7 @@ export type Owner = {
   id: string;
   name: string;
 };
-
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface ProjectResponse {
   content: Project[];
   page: number;
