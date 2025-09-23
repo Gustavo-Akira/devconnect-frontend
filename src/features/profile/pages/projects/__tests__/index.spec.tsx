@@ -71,6 +71,8 @@ describe('ProjectsPage', () => {
 
   it('should have pagination setup', () => {
     render(<ProjectsPage />);
-    expect(screen.getByRole('button', { name: /add new project/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /add new project/i }),
+    ).toBeInTheDocument();
   });
 });

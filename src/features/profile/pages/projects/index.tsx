@@ -11,7 +11,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useProjectsPage } from './hooks/useProjectsPage';
 
 export const ProjectsPage = () => {
-  const {state, actions} = useProjectsPage();
+  const { state, actions } = useProjectsPage();
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
     { field: 'description', headerName: 'Description', flex: 2, minWidth: 250 },
@@ -61,16 +61,16 @@ export const ProjectsPage = () => {
         columns={columns}
         rows={state.projects}
         paginationMode="server"
-        paginationModel={{ page:state.page, pageSize: state.size }}
+        paginationModel={{ page: state.page, pageSize: state.size }}
         rowCount={state.totalElements}
-        onPaginationModelChange={(model) =>{
-          if(model.page !== state.page){
+        onPaginationModelChange={(model) => {
+          if (model.page !== state.page) {
             console.log(model.page);
-            actions.handlePageChange(model.page)
+            actions.handlePageChange(model.page);
           }
-          if(model.pageSize !== state.size){
+          if (model.pageSize !== state.size) {
             console.log(model.pageSize);
-            actions.handleSizeChange(model.pageSize)
+            actions.handleSizeChange(model.pageSize);
           }
         }}
         loading={state.loading}
