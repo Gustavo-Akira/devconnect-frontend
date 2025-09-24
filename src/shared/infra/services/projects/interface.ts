@@ -22,3 +22,7 @@ export interface ProjectResponse {
 export type CreateProjectDTO = Omit<Project, 'owner' | 'id'> & {
   devProfileId: string;
 };
+
+export type EditProjectDTO = Omit<Project, 'owner'> & {
+  devProfileId: string;
+};
