@@ -11,7 +11,8 @@ export const useProjectsPage = () => {
   const [size, setSize] = useState<number>(5);
   const [totalElements, setTotalElements] = useState<number>(0);
   const devProfileId = useAuth().user!.id;
-
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [editProject, setEditProject] = useState<Project | null>(null);
   useEffect(() => {
     setLoading(true);
     getProjectsByDevProfileId(devProfileId, page, 5)
@@ -44,10 +45,15 @@ export const useProjectsPage = () => {
       page,
       size,
       totalElements,
+      devProfileId,
+      openModal,
+      editProject
     },
     actions: {
       handlePageChange,
       handleSizeChange,
+      setOpenModal,
+      setEditProject
     },
   };
 };

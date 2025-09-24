@@ -18,3 +18,7 @@ export interface ProjectResponse {
   totalElements: number;
   totalPages: number;
 }
+
+export type CreateProjectDTO = Omit<Project, "owner"| "id"> & {
+  devProfileId: string;
+};

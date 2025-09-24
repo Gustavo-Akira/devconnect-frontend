@@ -9,6 +9,8 @@ import {
 import { Delete, Edit, GitHub } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useProjectsPage } from './hooks/useProjectsPage';
+import { ProjectModal } from './components/project-modal/projectModal';
+import type { CreateProjectDTO } from '../../../../shared/infra/services/projects/interface';
 
 export const ProjectsPage = () => {
   const { state, actions } = useProjectsPage();
@@ -52,7 +54,7 @@ export const ProjectsPage = () => {
           </Typography>
         </Grid>
         <Grid size={2}>
-          <Button variant="outlined" color="primary">
+          <Button variant="outlined" color="primary" onClick={()=>actions.setOpenModal(true)}>
             Add New Project
           </Button>
         </Grid>
@@ -75,6 +77,7 @@ export const ProjectsPage = () => {
         }}
         loading={state.loading}
       />
+      <ProjectModal open={state.openModal} onClose={()=>{actions.setOpenModal(false)}} onSubmit={(data: CreateProjectDTO)=>console.log(data)} devProfileId={state.devProfileId} data={state.editProject}/>
     </Container>
   );
 };
