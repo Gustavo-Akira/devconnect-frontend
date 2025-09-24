@@ -47,13 +47,13 @@ export const useProjectsPage = () => {
       totalElements,
       devProfileId,
       openModal,
-      editProject
+      editProject,
     },
     actions: {
       handlePageChange,
       handleSizeChange,
       setOpenModal,
-      setEditProject
+      setEditProject,
     },
   };
 };

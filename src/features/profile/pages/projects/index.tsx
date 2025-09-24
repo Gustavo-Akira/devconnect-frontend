@@ -54,7 +54,11 @@ export const ProjectsPage = () => {
           </Typography>
         </Grid>
         <Grid size={2}>
-          <Button variant="outlined" color="primary" onClick={()=>actions.setOpenModal(true)}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => actions.setOpenModal(true)}
+          >
             Add New Project
           </Button>
         </Grid>
@@ -77,7 +81,15 @@ export const ProjectsPage = () => {
         }}
         loading={state.loading}
       />
-      <ProjectModal open={state.openModal} onClose={()=>{actions.setOpenModal(false)}} onSubmit={(data: CreateProjectDTO)=>console.log(data)} devProfileId={state.devProfileId} data={state.editProject}/>
+      <ProjectModal
+        open={state.openModal}
+        onClose={() => {
+          actions.setOpenModal(false);
+        }}
+        onSubmit={(data: CreateProjectDTO) => console.log(data)}
+        devProfileId={state.devProfileId}
+        data={state.editProject}
+      />
     </Container>
   );
 };
