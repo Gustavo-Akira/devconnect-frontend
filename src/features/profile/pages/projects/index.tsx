@@ -10,7 +10,6 @@ import { Delete, Edit, GitHub } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useProjectsPage } from './hooks/useProjectsPage';
 import { ProjectModal } from './components/project-modal/projectModal';
-import type { CreateProjectDTO } from '../../../../shared/infra/services/projects/interface';
 
 export const ProjectsPage = () => {
   const { state, actions } = useProjectsPage();
@@ -26,7 +25,7 @@ export const ProjectsPage = () => {
       renderCell: (params) => (
         <>
           <Tooltip title="Edit Project">
-            <IconButton onClick={() => console.log('Edit', params.row.id)}>
+            <IconButton onClick={() => actions.handleEditButton(params.row)}>
               <Edit color="warning" />
             </IconButton>
           </Tooltip>
@@ -86,7 +85,7 @@ export const ProjectsPage = () => {
         onClose={() => {
           actions.setOpenModal(false);
         }}
-        onSubmit={(data: CreateProjectDTO) => console.log(data)}
+        onSubmit={actions.handleModalSubmit}
         devProfileId={state.devProfileId}
         data={state.editProject}
       />

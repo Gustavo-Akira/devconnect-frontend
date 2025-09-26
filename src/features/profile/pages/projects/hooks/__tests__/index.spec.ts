@@ -1,6 +1,10 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useProjectsPage } from '../useProjectsPage';
-import { getProjectsByDevProfileId } from '../../../../../../shared/infra/services/projects/projectService';
+import {
+  getProjectsByDevProfileId,
+  createProject,
+  editProject as editProjectCall,
+} from '../../../../../../shared/infra/services/projects/projectService';
 import { useAuth } from '../../../../../../shared/context/auth/authContext';
 import { vi, type Mock } from 'vitest';
 
@@ -73,5 +77,87 @@ describe('useProjectsPage', () => {
 
     expect(result.current.state.size).toBe(20);
     expect(result.current.state.page).toBe(0);
+  });
+
+  it('should handle modal submit for create', async () => {
+    (createProject as Mock).mockResolvedValue({});
+    const { result } = renderHook(() => useProjectsPage());
+
+    act(() => {
+      result.current.actions.setOpenModal(true);
+    });
+
+    await act(async () => {
+      await result.current.actions.handleModalSubmit({
+        name: 'New Project',
+        description: 'desc',
+        repoUrl: 'http://github.com',
+        devProfileId: '',
+      });
+    });
+
+    expect(createProject).toHaveBeenCalledWith({
+      name: 'New Project',
+      description: 'desc',
+      repoUrl: 'http://github.com',
+      devProfileId: '',
+    });
+    expect(result.current.state.openModal).toBe(false);
+    expect(result.current.state.editProject).toBeNull();
+    expect(result.current.state.page).toBe(0);
+  });
+
+  it('should handle modal submit for edit', async () => {
+    (editProjectCall as Mock).mockResolvedValue({});
+    const { result } = renderHook(() => useProjectsPage());
+
+    act(() => {
+      result.current.actions.setEditProject({
+        id: '1',
+        name: 'Edit Project',
+        description: 'desc',
+        repoUrl: 'http://github.com',
+        owner: { id: '', name: '' },
+      });
+      result.current.actions.setOpenModal(true);
+    });
+
+    await act(async () => {
+      await result.current.actions.handleModalSubmit({
+        name: 'Edit Project',
+        description: 'desc',
+        repoUrl: 'http://github.com',
+        devProfileId: '1',
+      });
+    });
+
+    expect(editProjectCall).toHaveBeenCalledWith({
+      id: '1',
+      name: 'Edit Project',
+      description: 'desc',
+      repoUrl: 'http://github.com',
+      devProfileId: '1',
+    });
+    expect(result.current.state.openModal).toBe(false);
+    expect(result.current.state.editProject).toBeNull();
+    expect(result.current.state.page).toBe(0);
+  });
+
+  it('should handle edit button', () => {
+    const { result } = renderHook(() => useProjectsPage());
+    const project = {
+      id: '1',
+      name: 'Edit Project',
+      description: 'desc',
+      repoUrl: 'http://github.com',
+      owner: { id: '', name: '' },
+    };
+
+    act(() => {
+      result.current.actions.handleEditButton(project);
+    });
+
+    expect(result.current.state.editProject).toEqual(project);
+    expect(result.current.state.openModal).toBe(true);
   });
 });

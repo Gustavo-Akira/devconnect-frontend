@@ -57,12 +57,9 @@ describe('ProjectsPage', () => {
     expect(screen.getAllByLabelText('Open Repository')).toHaveLength(2);
   });
 
-  it('should trigger edit and delete handlers when clicked', async () => {
+  it('should trigger delete handler when clicked', async () => {
     const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
     render(<ProjectsPage />);
-    const editButtons = screen.getAllByLabelText('Edit Project');
-    fireEvent.click(editButtons[0]);
-    expect(spy).toHaveBeenCalledWith('Edit', '1');
     const deleteButtons = screen.getAllByLabelText('Delete Project');
     fireEvent.click(deleteButtons[0]);
     expect(spy).toHaveBeenCalledWith('Delete', '1');

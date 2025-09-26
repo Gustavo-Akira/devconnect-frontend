@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
-import { getProjectsByDevProfileId } from '../../../../../shared/infra/services/projects/projectService';
-import type { Project } from '../../../../../shared/infra/services/projects/interface';
+import {
+  createProject,
+  getProjectsByDevProfileId,
+  editProject as editProjectCall,
+} from '../../../../../shared/infra/services/projects/projectService';
+import type {
+  CreateProjectDTO,
+  Project,
+} from '../../../../../shared/infra/services/projects/interface';
 
 export const useProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -37,6 +44,27 @@ export const useProjectsPage = () => {
     setSize(newSize);
     setPage(0);
   };
+
+  const handleModalSubmit = async (data: CreateProjectDTO) => {
+    try {
+      if (editProject) {
+        await editProjectCall({ ...data, id: editProject.id });
+      } else {
+        await createProject(data);
+      }
+    } catch (error) {
+      console.error('Error submitting project:', error);
+      setError('Failed to submit project');
+    }
+    setPage(0);
+    setOpenModal(false);
+    setEditProject(null);
+  };
+
+  const handleEditButton = (project: Project) => {
+    setEditProject(project);
+    setOpenModal(true);
+  };
   return {
     state: {
       projects,
@@ -54,6 +82,8 @@ export const useProjectsPage = () => {
       handleSizeChange,
       setOpenModal,
       setEditProject,
+      handleModalSubmit,
+      handleEditButton,
     },
   };
 };
