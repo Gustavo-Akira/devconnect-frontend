@@ -11,7 +11,7 @@ import type {
   CreateProjectDTO,
   Project,
 } from '../../../../../../shared/infra/services/projects/interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const ProjectModal = ({
   open,
@@ -21,7 +21,7 @@ export const ProjectModal = ({
   devProfileId,
 }: {
   open: boolean;
-  onSubmit: (data: CreateProjectDTO) => void;
+  onSubmit: (data: CreateProjectDTO) => Promise<void>;
   devProfileId: string;
   onClose: () => void;
   data: Project | null;
@@ -32,6 +32,15 @@ export const ProjectModal = ({
     repoUrl: data ? data.repoUrl : '',
     devProfileId,
   });
+  useEffect(() => {
+    setInfo({
+      name: data ? data.name : '',
+      description: data ? data.description : '',
+      repoUrl: data ? data.repoUrl : '',
+      devProfileId,
+    });
+  }, [data, devProfileId]);
+  const [loading, setLoading] = useState<boolean>(false);
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{data ? 'Edit Project' : 'Add Project'}</DialogTitle>
@@ -68,7 +77,16 @@ export const ProjectModal = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onSubmit(info)}>Submit</Button>
+        <Button
+          onClick={async () => {
+            setLoading(true);
+            await onSubmit(info);
+            setLoading(false);
+          }}
+          loading={loading}
+        >
+          Submit
+        </Button>
         <Button onClick={onClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
