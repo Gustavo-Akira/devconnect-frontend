@@ -43,3 +43,12 @@ export const editProject = async (project: EditProjectDTO) => {
     throw error;
   }
 };
+
+export const deleteProject = async (id: string) => {
+  try {
+    await api.delete(`/v1/projects/${id}`);
+  } catch (error) {
+    console.error('Error delete project:', error);
+    throw error;
+  }
+};

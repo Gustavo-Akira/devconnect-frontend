@@ -5,6 +5,7 @@ import type {
   CreateProjectDTO,
 } from '../../../../../../../shared/infra/services/projects/interface';
 import { vi } from 'vitest';
+import { act } from 'react';
 
 describe('ProjectModal', () => {
   const baseProject: Project = {
@@ -73,8 +74,9 @@ describe('ProjectModal', () => {
       target: { value: 'Awesome description' },
     });
 
-    fireEvent.click(screen.getByText('Submit'));
-
+    act(() => {
+      fireEvent.click(screen.getByText('Submit'));
+    });
     expect(onSubmit).toHaveBeenCalledTimes(1);
     const submitted: CreateProjectDTO = onSubmit.mock.calls[0][0];
     expect(submitted).toEqual({

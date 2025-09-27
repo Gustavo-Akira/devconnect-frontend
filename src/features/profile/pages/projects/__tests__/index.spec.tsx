@@ -16,7 +16,7 @@ const mockProjects = [
     repoUrl: 'https://github.com/projecttwo',
   },
 ];
-
+const mockHandleDelete = vi.fn();
 vi.mock('../hooks/useProjectsPage', () => ({
   useProjectsPage: () => ({
     state: {
@@ -30,6 +30,7 @@ vi.mock('../hooks/useProjectsPage', () => ({
     actions: {
       handlePageChange: vi.fn(),
       handleSizeChange: vi.fn(),
+      handleDelete: mockHandleDelete,
     },
   }),
 }));
@@ -58,12 +59,10 @@ describe('ProjectsPage', () => {
   });
 
   it('should trigger delete handler when clicked', async () => {
-    const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
     render(<ProjectsPage />);
     const deleteButtons = screen.getAllByLabelText('Delete Project');
     fireEvent.click(deleteButtons[0]);
-    expect(spy).toHaveBeenCalledWith('Delete', '1');
-    spy.mockRestore();
+    expect(mockHandleDelete).toHaveBeenCalled();
   });
 
   it('should have pagination setup', () => {

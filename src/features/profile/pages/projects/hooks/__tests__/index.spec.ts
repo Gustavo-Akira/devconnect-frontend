@@ -4,6 +4,7 @@ import {
   getProjectsByDevProfileId,
   createProject,
   editProject as editProjectCall,
+  deleteProject,
 } from '../../../../../../shared/infra/services/projects/projectService';
 import { useAuth } from '../../../../../../shared/context/auth/authContext';
 import { vi, type Mock } from 'vitest';
@@ -104,7 +105,7 @@ describe('useProjectsPage', () => {
     });
     expect(result.current.state.openModal).toBe(false);
     expect(result.current.state.editProject).toBeNull();
-    expect(result.current.state.page).toBe(0);
+    expect(result.current.state.reloadFlag).toBe(1);
   });
 
   it('should handle modal submit for edit', async () => {
@@ -140,10 +141,10 @@ describe('useProjectsPage', () => {
     });
     expect(result.current.state.openModal).toBe(false);
     expect(result.current.state.editProject).toBeNull();
-    expect(result.current.state.page).toBe(0);
+    expect(result.current.state.reloadFlag).toBe(1);
   });
 
-  it('should handle edit button', () => {
+  it('should handle edit button', async () => {
     const { result } = renderHook(() => useProjectsPage());
     const project = {
       id: '1',
@@ -159,5 +160,15 @@ describe('useProjectsPage', () => {
 
     expect(result.current.state.editProject).toEqual(project);
     expect(result.current.state.openModal).toBe(true);
+  });
+
+  it('should handle delete button', async () => {
+    (deleteProject as Mock).mockResolvedValue(() => Promise.resolve());
+    const { result } = renderHook(() => useProjectsPage());
+    await act(async () => {
+      await result.current.actions.handleDelete('1');
+    });
+    expect(result.current.state.reloadFlag).toBe(1);
+    expect(result.current.state.loading).toBeFalsy();
   });
 });

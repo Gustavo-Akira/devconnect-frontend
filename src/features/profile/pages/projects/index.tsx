@@ -30,7 +30,7 @@ export const ProjectsPage = () => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete Project">
-            <IconButton onClick={() => console.log('Delete', params.row.id)}>
+            <IconButton onClick={() => actions.handleDelete(params.row.id)}>
               <Delete color="error" />
             </IconButton>
           </Tooltip>
