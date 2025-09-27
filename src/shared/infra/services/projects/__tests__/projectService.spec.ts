@@ -2,6 +2,7 @@ import { vi, type Mock } from 'vitest';
 import { api } from '../../../api';
 import {
   createProject,
+  deleteProject,
   editProject,
   getProjectsByDevProfileId,
 } from '../projectService';
@@ -12,6 +13,7 @@ vi.mock('../../../api', () => ({
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
+    delete: vi.fn(),
   },
 }));
 
@@ -126,6 +128,22 @@ describe('project', () => {
 
       await expect(editProject(project)).rejects.toThrow('Update failed');
       expect(mockedApi.put).toHaveBeenCalledWith('/v1/projects', project);
+    });
+  });
+
+  describe('deleteProject', () => {
+    it('should delete when api return no errors', async () => {
+      const id = '1';
+      mockedApi.delete.mockResolvedValue(() => Promise.resolve());
+      expect(() => deleteProject(id)).not.toThrow();
+      expect(mockedApi.delete).toHaveBeenCalledWith('/v1/projects/1');
+    });
+
+    it('should not delete when api return errors', async () => {
+      const id = '1';
+      mockedApi.delete.mockRejectedValue(new Error('Delete failed'));
+      expect(deleteProject(id)).rejects.toThrow('Delete failed');
+      expect(mockedApi.delete).toHaveBeenCalledWith('/v1/projects/1');
     });
   });
 });

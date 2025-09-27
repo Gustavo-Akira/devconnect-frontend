@@ -4,6 +4,7 @@ import {
   createProject,
   getProjectsByDevProfileId,
   editProject as editProjectCall,
+  deleteProject,
 } from '../../../../../shared/infra/services/projects/projectService';
 import type {
   CreateProjectDTO,
@@ -20,6 +21,9 @@ export const useProjectsPage = () => {
   const devProfileId = useAuth().user!.id;
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editProject, setEditProject] = useState<Project | null>(null);
+  const [reloadFlag, setReloadFlag] = useState<number>(0);
+
+  const reload = () => setReloadFlag((prev) => prev + 1);
   useEffect(() => {
     setLoading(true);
     getProjectsByDevProfileId(devProfileId, page, 5)
@@ -34,7 +38,7 @@ export const useProjectsPage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [page, devProfileId]);
+  }, [page, devProfileId, reloadFlag]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -43,6 +47,18 @@ export const useProjectsPage = () => {
   const handleSizeChange = (newSize: number) => {
     setSize(newSize);
     setPage(0);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      setLoading(true);
+      await deleteProject(id);
+      setLoading(false);
+      reload();
+    } catch (error) {
+      console.error('error to delete project', error);
+      setError('Failed to delete the project');
+    }
   };
 
   const handleModalSubmit = async (data: CreateProjectDTO) => {
@@ -56,7 +72,7 @@ export const useProjectsPage = () => {
       console.error('Error submitting project:', error);
       setError('Failed to submit project');
     }
-    setPage(0);
+    reload();
     setOpenModal(false);
     setEditProject(null);
   };
@@ -76,6 +92,7 @@ export const useProjectsPage = () => {
       devProfileId,
       openModal,
       editProject,
+      reloadFlag,
     },
     actions: {
       handlePageChange,
@@ -84,6 +101,7 @@ export const useProjectsPage = () => {
       setEditProject,
       handleModalSubmit,
       handleEditButton,
+      handleDelete,
     },
   };
 };
