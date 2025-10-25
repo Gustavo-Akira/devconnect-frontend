@@ -1,4 +1,4 @@
-import { signin, signup } from '../authService';
+import { signin, signup, logout } from '../authService';
 import { api } from '../../../api';
 import type { SignupRequest } from '../types';
 import { vi, type Mock } from 'vitest';
@@ -71,5 +71,30 @@ describe('signin', () => {
       password: mockPassword,
       grantType: 'password',
     });
+  });
+});
+
+
+describe('logout', () => {
+  it('deve chamar o endpoint correto para logout', async () => {
+    (api.post as Mock).mockResolvedValueOnce({});
+
+    await logout();
+
+    expect(api.post).toHaveBeenCalledWith(
+      'v1/auth/logout',
+      {},
+    );
+  });
+
+  it('deve lançar erro quando a requisição falhar', async () => {
+    const mockError = new Error('Request failed');
+    (api.post as Mock).mockRejectedValueOnce(mockError);
+
+    await expect(logout()).rejects.toThrow('Request failed');
+    expect(api.post).toHaveBeenCalledWith(
+      'v1/auth/logout',
+      {},
+    );
   });
 });

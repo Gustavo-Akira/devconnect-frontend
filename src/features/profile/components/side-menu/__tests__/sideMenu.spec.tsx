@@ -1,11 +1,10 @@
 // SideMenu.test.tsx
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { SideMenu } from '../sideMenu';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../../../../app/theme';
 import { PROFILE_PATHS } from '../../../route';
 import { vi } from 'vitest';
-
 const renderWithTheme = () => {
   return render(
     <ThemeProvider theme={theme}>
@@ -19,8 +18,14 @@ vi.mock('react-router-dom', async (actual) => ({
   ...(await actual()),
   useNavigate: () => mockNavigate,
 }));
+vi.mock('../../../../../shared/infra/services/auth/authService', () => ({
+  logout: () => Promise.resolve(),
+}));
 
 describe('SideMenu', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   it('should render profile image', () => {
     renderWithTheme();
     const img = screen.getByAltText('profileImage');
@@ -58,5 +63,21 @@ describe('SideMenu', () => {
     const profileLink = screen.getByText('Profile');
     profileLink.click();
     expect(mockNavigate).toHaveBeenCalledWith(PROFILE_PATHS.PROFILE);
+  });
+
+  it("should call navigate function when 'Profile' link is clicked", () => {
+    renderWithTheme();
+    const projectLink = screen.getByText('Projects');
+    projectLink.click();
+    expect(mockNavigate).toHaveBeenCalledWith(PROFILE_PATHS.PROFILE_PROJECTS);
+  });
+
+  it("should call navigate function when 'Profile' link is clicked", async() => {
+    renderWithTheme();
+    const exitLink = screen.getByText('Exit');
+    exitLink.click()
+    await waitFor(() =>{
+      expect(mockNavigate).toHaveBeenCalledWith('/');
+    });
   });
 });
