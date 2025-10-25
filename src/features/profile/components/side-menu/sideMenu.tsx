@@ -9,6 +9,7 @@ import ProfileImage from '../../../../shared/assets/images/profile.png';
 import { AccountCircle, Book, ExitToAppSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { PROFILE_PATHS } from '../../route';
+import { logout } from '../../../../shared/infra/services/auth/authService';
 
 export const SideMenu = () => {
   const navigate = useNavigate();
@@ -34,11 +35,17 @@ export const SideMenu = () => {
           <AccountCircle titleAccess="account" />
           Profile
         </SideMenuLink>
-        <SideMenuLink>
+        <SideMenuLink onClick={() => navigate(PROFILE_PATHS.PROFILE_PROJECTS)}>
           <Book titleAccess="projects" />
           Projects
         </SideMenuLink>
-        <SideMenuLink>
+        <SideMenuLink
+          onClick={() => {
+            logout().then(() => {
+              navigate('/');
+            });
+          }}
+        >
           <ExitToAppSharp titleAccess="exit" /> Exit
         </SideMenuLink>
       </SideMenuNavBar>
