@@ -35,15 +35,17 @@ export const SideMenu = () => {
           <AccountCircle titleAccess="account" />
           Profile
         </SideMenuLink>
-        <SideMenuLink onClick={()=> navigate(PROFILE_PATHS.PROFILE_PROJECTS)}>
+        <SideMenuLink onClick={() => navigate(PROFILE_PATHS.PROFILE_PROJECTS)}>
           <Book titleAccess="projects" />
           Projects
         </SideMenuLink>
-        <SideMenuLink onClick={() => {
-          logout().then(() => {
-            navigate('/');
-          });
-        }}>
+        <SideMenuLink
+          onClick={() => {
+            logout().then(() => {
+              navigate('/');
+            });
+          }}
+        >
           <ExitToAppSharp titleAccess="exit" /> Exit
         </SideMenuLink>
       </SideMenuNavBar>

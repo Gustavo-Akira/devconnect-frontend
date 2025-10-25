@@ -72,11 +72,11 @@ describe('SideMenu', () => {
     expect(mockNavigate).toHaveBeenCalledWith(PROFILE_PATHS.PROFILE_PROJECTS);
   });
 
-  it("should call logout and navigate function when 'Exit' link is clicked", async() => {
+  it("should call logout and navigate function when 'Exit' link is clicked", async () => {
     renderWithTheme();
     const exitLink = screen.getByText('Exit');
-    exitLink.click()
-    await waitFor(() =>{
+    exitLink.click();
+    await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });

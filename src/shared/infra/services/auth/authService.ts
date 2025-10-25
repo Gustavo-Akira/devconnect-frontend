@@ -25,16 +25,11 @@ export const signin = async (email: string, password: string) => {
   }
 };
 
-
 export const logout = async () => {
   try {
-    await api.post(
-      'v1/auth/logout',
-      {},
-    );
-  }catch (error) {
+    await api.post('v1/auth/logout', {});
+  } catch (error) {
     console.error('Error during logout:', error);
     throw error;
   }
-}
-  
+};

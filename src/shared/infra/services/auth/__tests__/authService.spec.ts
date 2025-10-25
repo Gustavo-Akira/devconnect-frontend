@@ -74,17 +74,13 @@ describe('signin', () => {
   });
 });
 
-
 describe('logout', () => {
   it('deve chamar o endpoint correto para logout', async () => {
     (api.post as Mock).mockResolvedValueOnce({});
 
     await logout();
 
-    expect(api.post).toHaveBeenCalledWith(
-      'v1/auth/logout',
-      {},
-    );
+    expect(api.post).toHaveBeenCalledWith('v1/auth/logout', {});
   });
 
   it('deve lançar erro quando a requisição falhar', async () => {
@@ -92,9 +88,6 @@ describe('logout', () => {
     (api.post as Mock).mockRejectedValueOnce(mockError);
 
     await expect(logout()).rejects.toThrow('Request failed');
-    expect(api.post).toHaveBeenCalledWith(
-      'v1/auth/logout',
-      {},
-    );
+    expect(api.post).toHaveBeenCalledWith('v1/auth/logout', {});
   });
 });
