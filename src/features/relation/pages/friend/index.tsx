@@ -1,6 +1,3 @@
-
 export const FriendsPage = () => {
-    return (
-        <div>Meus Amigos</div>
-    );
-}
+  return <div>Meus Amigos</div>;
+};
