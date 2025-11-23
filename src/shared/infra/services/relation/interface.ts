@@ -1,5 +1,5 @@
 export type Recommendations = {
-    ID: number;
-    Name: string;
-    Score: number;
-}
+  ID: number;
+  Name: string;
+  Score: number;
+};
