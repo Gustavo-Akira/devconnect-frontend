@@ -6,7 +6,8 @@ export const FriendsPage = () => {
     <ul>
       {state.recommendations.map((recommendation) => (
         <li key={recommendation.ID}>
-          {recommendation.Name} - {recommendation.Score}
+          {recommendation.Name} - {recommendation.Score} -{' '}
+          {recommendation.CityName} - {recommendation.Stacks}
         </li>
       ))}
     </ul>

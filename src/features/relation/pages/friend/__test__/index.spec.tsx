@@ -39,6 +39,8 @@ describe('Friends Page Ui tests', () => {
         ID: 12,
         Name: 'Akira',
         Score: 1.0,
+        CityName: 'Mogi',
+        Stacks: ['java'],
       },
     ]);
   });
@@ -46,6 +48,8 @@ describe('Friends Page Ui tests', () => {
     render(<FriendsPage />);
     waitFor(() => {
       expect(screen.getByText('Akira')).toBeInTheDocument();
+      expect(screen.getByText('java')).toBeInTheDocument();
+      expect(screen.getByText('Mogi')).toBeInTheDocument();
     });
   });
 });

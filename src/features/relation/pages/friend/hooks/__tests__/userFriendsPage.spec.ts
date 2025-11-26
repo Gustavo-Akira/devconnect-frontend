@@ -89,7 +89,7 @@ describe('useFriendsPage', () => {
     });
 
     (getRecommendationsByProfile as Mock).mockResolvedValueOnce([
-      { ID: 20, Name: 'Novo', Score: 1.0 },
+      { ID: 20, Name: 'Novo', Score: 1.0, CityName: 'Mogi', Stacks: ['java'] },
     ]);
 
     rerender();
@@ -97,6 +97,8 @@ describe('useFriendsPage', () => {
     await waitFor(() => {
       expect(getRecommendationsByProfile).toHaveBeenCalledWith(20);
       expect(result.current.state.recommendations[0].ID).toBe(20);
+      expect(result.current.state.recommendations[0].CityName).toBe('Mogi');
+      expect(result.current.state.recommendations[0].Stacks[0]).toBe('java');
     });
   });
 });
