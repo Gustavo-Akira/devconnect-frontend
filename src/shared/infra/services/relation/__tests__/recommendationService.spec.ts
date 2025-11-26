@@ -16,21 +16,25 @@ describe('recommendationService test', () => {
           ID: 251,
           Name: 'Gustavo Lima',
           Score: 0.4,
+          Stacks: ['java'],
         },
         {
           ID: 7,
           Name: 'Gustavo Lima',
           Score: 0,
+          Stacks: ['javascript'],
         },
         {
           ID: 10,
           Name: 'Gustavo Lima',
           Score: 0,
+          Stacks: ['java'],
         },
         {
           ID: 6,
           Name: 'Gustavo Lima',
           Score: 0,
+          Stacks: ['python'],
         },
       ];
       const mockApiGet = relationApi.get as Mock;
