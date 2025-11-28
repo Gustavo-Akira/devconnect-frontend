@@ -61,6 +61,7 @@ describe('useFriendsPage', () => {
 
     await waitFor(() => {
       expect(errorSpy).toHaveBeenCalled();
+      expect(result.current.state.error).not.toBe('');
     });
 
     expect(result.current.state.recommendations.length).toBe(0);
@@ -80,7 +81,6 @@ describe('useFriendsPage', () => {
       expect(getRecommendationsByProfile).toHaveBeenCalledWith(13);
     });
 
-    // Muda o usuário para disparar o useEffect novamente
     (useAuth as Mock).mockReturnValue({
       user: {
         id: '20',
@@ -89,7 +89,7 @@ describe('useFriendsPage', () => {
     });
 
     (getRecommendationsByProfile as Mock).mockResolvedValueOnce([
-      { ID: 20, Name: 'Novo', Score: 1.0, CityName: 'Mogi', Stacks: ['java'] },
+      { ID: 20, Name: 'Novo', Score: 1.0, City: 'Mogi', Stacks: ['java'] },
     ]);
 
     rerender();
@@ -97,7 +97,7 @@ describe('useFriendsPage', () => {
     await waitFor(() => {
       expect(getRecommendationsByProfile).toHaveBeenCalledWith(20);
       expect(result.current.state.recommendations[0].ID).toBe(20);
-      expect(result.current.state.recommendations[0].CityName).toBe('Mogi');
+      expect(result.current.state.recommendations[0].City).toBe('Mogi');
       expect(result.current.state.recommendations[0].Stacks[0]).toBe('java');
     });
   });
