@@ -1,12 +1,21 @@
-import { Container, Grid, Skeleton, Typography, Box, Alert, Button, AlertTitle } from "@mui/material";
-import { useFriendsPage } from "./hooks/useFriendsPage";
-import { ProfileCard } from "../../components/profile-card/profileCard";
+import {
+  Container,
+  Grid,
+  Skeleton,
+  Typography,
+  Box,
+  Alert,
+  Button,
+  AlertTitle,
+} from '@mui/material';
+import { useFriendsPage } from './hooks/useFriendsPage';
+import { ProfileCard } from '../../components/profile-card/profileCard';
 
 export const FriendsPage = () => {
   const { state, actions } = useFriendsPage();
 
   const { loading, error, recommendations } = state;
-  const {fetchRecommendations} = actions
+  const { fetchRecommendations } = actions;
 
   return (
     <Container sx={{ py: 4 }}>
@@ -17,8 +26,8 @@ export const FriendsPage = () => {
       {loading && (
         <Grid container spacing={3}>
           {[...Array(4)].map((_, i) => (
-            <Grid size={{md:6, xs:12}} key={i}>
-              <Box sx={{ display: "flex", gap: 2 }}>
+            <Grid size={{ md: 6, xs: 12 }} key={i}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
                 <Skeleton variant="circular" width={64} height={64} />
                 <Box sx={{ flex: 1 }}>
                   <Skeleton variant="text" width="40%" height={28} />
@@ -37,10 +46,8 @@ export const FriendsPage = () => {
         </Typography>
       )}
 
-       {error && (
-        <Alert
-          severity="error"
-        >
+      {error && (
+        <Alert severity="error">
           <AlertTitle>Ocorreu um erro ao carregar as recomendações.</AlertTitle>
           <Button color="inherit" size="small" onClick={fetchRecommendations}>
             Tentar novamente
@@ -51,7 +58,7 @@ export const FriendsPage = () => {
       {!loading && recommendations.length > 0 && (
         <Grid container spacing={3}>
           {recommendations.map((rec) => (
-            <Grid size={{md:6, xs:12}} key={rec.ID}>
+            <Grid size={{ md: 6, xs: 12 }} key={rec.ID}>
               <ProfileCard
                 name={rec.Name}
                 city={rec.City}

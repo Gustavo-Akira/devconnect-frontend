@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Recommendations } from '../../../../../shared/infra/services/relation/interface';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
 import { getRecommendationsByProfile } from '../../../../../shared/infra/services/relation/recommendationService';
@@ -7,13 +7,10 @@ export const useFriendsPage = () => {
   const { user } = useAuth();
   const [recommendations, setRecommendations] = useState<Recommendations[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  useEffect(() => {
-    fetchRecommendations();
-  }, [user]);
-  const fetchRecommendations = async ()=>{
+  const [error, setError] = useState<string>('');
+  const fetchRecommendations = useCallback(async () => {
     const userId = Number.parseInt(user!.id);
-    setError("");
+    setError('');
     setLoading(true);
     getRecommendationsByProfile(userId)
       .then((data) => {
@@ -22,19 +19,24 @@ export const useFriendsPage = () => {
       })
       .catch((error) => {
         console.error(error);
-        setError(error)
-      }).finally(()=>{
+        setError(error);
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }
+  }, [user]);
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
+
   return {
     state: {
       recommendations,
       loading,
       error,
     },
-    actions:{
-      fetchRecommendations
-    }
+    actions: {
+      fetchRecommendations,
+    },
   };
 };

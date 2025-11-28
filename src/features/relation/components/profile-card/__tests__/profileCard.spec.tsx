@@ -1,40 +1,42 @@
-import { render, screen } from "@testing-library/react";
-import { ProfileCard } from "../profileCard";
-import "@testing-library/jest-dom";
+import { render, screen } from '@testing-library/react';
+import { ProfileCard } from '../profileCard';
+import '@testing-library/jest-dom';
 
 // Necessário para evitar warnings do MUI sobre ResizeObserver
 beforeAll(() => {
-  window.ResizeObserver = window.ResizeObserver || class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
+  window.ResizeObserver =
+    window.ResizeObserver ||
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
 });
 
-describe("ProfileCard Component", () => {
+describe('ProfileCard Component', () => {
   const mockProps = {
-    name: "Gustavo",
-    city: "São Paulo",
+    name: 'Gustavo',
+    city: 'São Paulo',
     score: 0.82,
-    stacks: ["React", "Node.js", "Go"],
+    stacks: ['React', 'Node.js', 'Go'],
   };
 
-  it("renderiza o nome", () => {
+  it('renderiza o nome', () => {
     render(<ProfileCard {...mockProps} />);
-    expect(screen.getByText("Gustavo")).toBeInTheDocument();
+    expect(screen.getByText('Gustavo')).toBeInTheDocument();
   });
 
-  it("renderiza a cidade", () => {
+  it('renderiza a cidade', () => {
     render(<ProfileCard {...mockProps} />);
-    expect(screen.getByText("São Paulo")).toBeInTheDocument();
+    expect(screen.getByText('São Paulo')).toBeInTheDocument();
   });
 
-  it("mostra o score em porcentagem corretamente", () => {
+  it('mostra o score em porcentagem corretamente', () => {
     render(<ProfileCard {...mockProps} />);
-    expect(screen.getByText("Match: 82%")).toBeInTheDocument();
+    expect(screen.getByText('Match: 82%')).toBeInTheDocument();
   });
 
-  it("renderiza os stacks", () => {
+  it('renderiza os stacks', () => {
     render(<ProfileCard {...mockProps} />);
 
     mockProps.stacks.forEach((stack) => {
@@ -42,7 +44,7 @@ describe("ProfileCard Component", () => {
     });
   });
 
-  it("tem a barra de progresso com o valor correto", () => {
+  it('tem a barra de progresso com o valor correto', () => {
     const { container } = render(<ProfileCard {...mockProps} />);
 
     const progress = container.querySelector('.MuiLinearProgress-bar');
@@ -50,17 +52,10 @@ describe("ProfileCard Component", () => {
     expect(progress).toHaveStyle(`transform: translateX(-18%)`);
   });
 
-  it("renderiza corretamente mesmo sem stacks", () => {
-    render(
-      <ProfileCard
-        name="João"
-        city="Curitiba"
-        score={0.5}
-        stacks={[]}
-      />
-    );
+  it('renderiza corretamente mesmo sem stacks', () => {
+    render(<ProfileCard name="João" city="Curitiba" score={0.5} stacks={[]} />);
 
-    expect(screen.getByText("João")).toBeInTheDocument();
-    expect(screen.queryByRole("chip")).not.toBeInTheDocument(); // nenhum chip
+    expect(screen.getByText('João')).toBeInTheDocument();
+    expect(screen.queryByRole('chip')).not.toBeInTheDocument(); // nenhum chip
   });
 });
