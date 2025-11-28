@@ -2,6 +2,6 @@ export type Recommendations = {
   ID: number;
   Name: string;
   Score: number;
-  CityName: string;
+  City: string;
   Stacks: string[];
 };

@@ -6,8 +6,15 @@ import { getRecommendationsByProfile } from '../../../../../shared/infra/service
 export const useFriendsPage = () => {
   const { user } = useAuth();
   const [recommendations, setRecommendations] = useState<Recommendations[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
   useEffect(() => {
+    fetchRecommendations();
+  }, [user]);
+  const fetchRecommendations = async ()=>{
     const userId = Number.parseInt(user!.id);
+    setError("");
+    setLoading(true);
     getRecommendationsByProfile(userId)
       .then((data) => {
         setRecommendations(data);
@@ -15,12 +22,19 @@ export const useFriendsPage = () => {
       })
       .catch((error) => {
         console.error(error);
+        setError(error)
+      }).finally(()=>{
+        setLoading(false);
       });
-  }, [user]);
-
+  }
   return {
     state: {
       recommendations,
+      loading,
+      error,
     },
+    actions:{
+      fetchRecommendations
+    }
   };
 };
