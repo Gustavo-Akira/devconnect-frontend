@@ -6,18 +6,17 @@ export type Recommendations = {
   Stacks: string[];
 };
 
-
 export type RelationRequest = {
   FromId: number;
   TargetId: number;
-  RelationType: "FRIEND"|"BLOCKED" 
-}
+  RelationType: 'FRIEND' | 'BLOCKED';
+};
 
 export type Relation = {
-  relation:{
+  relation: {
     FromId: number;
     TargetId: number;
-    RelationType: "FRIEND"|"BLOCKED";
+    RelationType: 'FRIEND' | 'BLOCKED';
     Status: string;
-  }
-}
+  };
+};
