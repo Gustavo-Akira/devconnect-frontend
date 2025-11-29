@@ -1,10 +1,12 @@
 import { vi, type Mock } from 'vitest';
 import { relationApi } from '../../../api';
-import { getRecommendationsByProfile } from '../recommendationService';
+import { getRecommendationsByProfile, requestFriendShip } from '../recommendationService';
+import type { Relation } from '../interface';
 
 vi.mock('../../../api', () => ({
   relationApi: {
     get: vi.fn(),
+    post: vi.fn()
   },
 }));
 
@@ -50,4 +52,34 @@ describe('recommendationService test', () => {
       await expect(getRecommendationsByProfile(1)).rejects.toThrow(error);
     });
   });
+
+  describe("requestFriendShip",()=>{
+    it('should create Relation Friendship with valid ids',async()=>{
+      const fromId: number = 1;
+      const toId: number = 2;
+      const mockApiPost = relationApi.post as Mock;
+      const validReturn: Relation = {
+        relation:{
+          FromId: fromId,
+          TargetId: toId,
+          RelationType: "FRIEND",
+          Status: "PENDING"
+        }
+      };
+
+      mockApiPost.mockResolvedValueOnce({data: validReturn});
+      const returnedData = await requestFriendShip(fromId, toId)
+      expect(returnedData).toBe(validReturn);
+    });
+
+    it('should thrown an error when post return an error', async()=>{
+      const fromId: number = 1;
+      const toId: number = 2;
+      const mockApiPost = relationApi.post as Mock;
+      const validReturn = new Error("error");
+
+      mockApiPost.mockRejectedValueOnce(validReturn);
+      await expect(requestFriendShip(fromId, toId)).rejects.toThrow(validReturn);
+    });
+  })
 });
