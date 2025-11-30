@@ -23,7 +23,7 @@ export const useFriendsPage = () => {
       })
       .catch((error) => {
         console.error(error);
-        setError(error);
+        setError('Erro ao pegar recomendações');
       })
       .finally(() => {
         setLoading(false);
