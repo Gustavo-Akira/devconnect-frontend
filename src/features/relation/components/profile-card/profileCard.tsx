@@ -1,6 +1,8 @@
 import {
   Box,
+  Button,
   Card,
+  CardActions,
   CardContent,
   Chip,
   LinearProgress,
@@ -9,15 +11,21 @@ import {
 } from '@mui/material';
 
 export function ProfileCard({
+  id,
   name,
   city,
   score,
   stacks,
+  onAddFriend,
+  onBlock,
 }: {
+  id: number;
   name: string;
   city: string;
   score: number;
   stacks: string[];
+  onAddFriend?: (id: number) => Promise<void>;
+  onBlock?: (id: number) => Promise<void>;
 }) {
   return (
     <Card sx={{ p: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -42,6 +50,20 @@ export function ProfileCard({
           </Stack>
         </Stack>
       </CardContent>
+      <CardActions>
+        <Button variant="contained" fullWidth onClick={() => onAddFriend?.(id)}>
+          Adicionar
+        </Button>
+
+        <Button
+          variant="outlined"
+          color="error"
+          fullWidth
+          onClick={() => onBlock?.(id)}
+        >
+          Bloquear
+        </Button>
+      </CardActions>
     </Card>
   );
 }

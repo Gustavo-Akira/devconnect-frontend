@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Recommendations } from '../../../../../shared/infra/services/relation/interface';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
-import { getRecommendationsByProfile } from '../../../../../shared/infra/services/relation/recommendationService';
+import {
+  getRecommendationsByProfile,
+  requestFriendShip,
+} from '../../../../../shared/infra/services/relation/recommendationService';
 
 export const useFriendsPage = () => {
   const { user } = useAuth();
@@ -29,6 +32,29 @@ export const useFriendsPage = () => {
     fetchRecommendations();
   }, [fetchRecommendations]);
 
+  const addFriendShip = useCallback(
+    async (toId: number) => {
+      const userId = Number.parseInt(user!.id);
+      setLoading(true);
+      return requestFriendShip(userId, toId)
+        .then(() => {
+          setRecommendations(
+            recommendations.filter(
+              (recommendation) => recommendation.ID != toId,
+            ),
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('Erro ao enviar solicitação');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [user, recommendations],
+  );
+
   return {
     state: {
       recommendations,
@@ -37,6 +63,7 @@ export const useFriendsPage = () => {
     },
     actions: {
       fetchRecommendations,
+      addFriendShip,
     },
   };
 };

@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ProfileCard } from '../profileCard';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
-// Necessário para evitar warnings do MUI sobre ResizeObserver
 beforeAll(() => {
   window.ResizeObserver =
     window.ResizeObserver ||
@@ -14,12 +14,22 @@ beforeAll(() => {
 });
 
 describe('ProfileCard Component', () => {
+  const mockOnAddFriend = vi.fn();
+  const mockOnBlock = vi.fn();
+
   const mockProps = {
+    id: 1,
     name: 'Gustavo',
     city: 'São Paulo',
     score: 0.82,
     stacks: ['React', 'Node.js', 'Go'],
+    onAddFriend: mockOnAddFriend,
+    onBlock: mockOnBlock,
   };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renderiza o nome', () => {
     render(<ProfileCard {...mockProps} />);
@@ -53,9 +63,34 @@ describe('ProfileCard Component', () => {
   });
 
   it('renderiza corretamente mesmo sem stacks', () => {
-    render(<ProfileCard name="João" city="Curitiba" score={0.5} stacks={[]} />);
+    render(
+      <ProfileCard
+        id={2}
+        name="João"
+        city="Curitiba"
+        score={0.5}
+        stacks={[]}
+      />,
+    );
 
     expect(screen.getByText('João')).toBeInTheDocument();
-    expect(screen.queryByRole('chip')).not.toBeInTheDocument(); // nenhum chip
+  });
+
+  it('chama onAddFriend com id correto ao clicar Adicionar', () => {
+    render(<ProfileCard {...mockProps} />);
+
+    const addButton = screen.getByRole('button', { name: /Adicionar/i });
+    fireEvent.click(addButton);
+
+    expect(mockOnAddFriend).toHaveBeenCalledWith(1);
+  });
+
+  it('chama onBlock com id correto ao clicar Bloquear', () => {
+    render(<ProfileCard {...mockProps} />);
+
+    const blockButton = screen.getByRole('button', { name: /Bloquear/i });
+    fireEvent.click(blockButton);
+
+    expect(mockOnBlock).toHaveBeenCalledWith(1);
   });
 });
