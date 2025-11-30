@@ -4,6 +4,7 @@ import { vi, type Mock } from 'vitest';
 import { useFriendsPage } from '../useFriendsPage';
 import { useAuth } from '../../../../../../shared/context/auth/authContext';
 import {
+  blockUser,
   getRecommendationsByProfile,
   requestFriendShip,
 } from '../../../../../../shared/infra/services/relation/recommendationService';
@@ -21,6 +22,7 @@ vi.mock(
   () => ({
     getRecommendationsByProfile: vi.fn(),
     requestFriendShip: vi.fn(),
+    blockUser: vi.fn(),
   }),
 );
 
@@ -154,6 +156,56 @@ describe('useFriendsPage', () => {
       expect(requestFriendShip).toHaveBeenCalledWith(13, 55);
       expect(errorSpy).toHaveBeenCalled();
       expect(result.current.state.error).toBe('Erro ao enviar solicitação');
+      expect(result.current.state.recommendations.length).toBe(1);
+    });
+  });
+
+  it('should send block user request and filter recommendations on success', async () => {
+    (getRecommendationsByProfile as Mock).mockResolvedValueOnce([
+      { ID: 12, Name: 'Akira', Score: 1.0 },
+      { ID: 34, Name: 'Other', Score: 0.5 },
+    ]);
+    (blockUser as Mock).mockResolvedValueOnce({});
+
+    const { result } = renderHook(() => useFriendsPage());
+
+    await waitFor(() => {
+      expect(result.current.state.recommendations.length).toBe(2);
+    });
+
+    await act(async () => {
+      await result.current.actions.blockUserAction(12);
+    });
+
+    await waitFor(() => {
+      expect(blockUser).toHaveBeenCalledWith(13, 12);
+      expect(result.current.state.recommendations.length).toBe(1);
+      expect(result.current.state.recommendations[0].ID).toBe(34);
+      expect(result.current.state.error).toBe('');
+      expect(result.current.state.loading).toBe(false);
+    });
+  });
+
+  it('should set error when friend request fails', async () => {
+    (getRecommendationsByProfile as Mock).mockResolvedValueOnce([
+      { ID: 55, Name: 'Fail', Score: 0.2 },
+    ]);
+    (blockUser as Mock).mockRejectedValueOnce(new Error('fail request'));
+
+    const { result } = renderHook(() => useFriendsPage());
+
+    await waitFor(() => {
+      expect(result.current.state.recommendations.length).toBe(1);
+    });
+
+    await act(async () => {
+      await result.current.actions.blockUserAction(55);
+    });
+
+    await waitFor(() => {
+      expect(blockUser).toHaveBeenCalledWith(13, 55);
+      expect(errorSpy).toHaveBeenCalled();
+      expect(result.current.state.error).toBe('Erro ao blockear usuario');
       expect(result.current.state.recommendations.length).toBe(1);
     });
   });
