@@ -67,7 +67,7 @@ describe('useFriendsPage', () => {
 
     await waitFor(() => {
       expect(errorSpy).toHaveBeenCalled();
-      expect(result.current.state.error).not.toBe('');
+      expect(result.current.state.error).toBe('Erro ao pegar recomendações');
     });
 
     expect(result.current.state.recommendations.length).toBe(0);
