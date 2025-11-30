@@ -15,7 +15,7 @@ export const FriendsPage = () => {
   const { state, actions } = useFriendsPage();
 
   const { loading, error, recommendations } = state;
-  const { fetchRecommendations, addFriendShip } = actions;
+  const { fetchRecommendations, addFriendShip, blockUserAction } = actions;
 
   return (
     <Container sx={{ py: 4 }}>
@@ -66,6 +66,7 @@ export const FriendsPage = () => {
                 score={rec.Score}
                 stacks={rec.Stacks}
                 onAddFriend={addFriendShip}
+                onBlock={blockUserAction}
               />
             </Grid>
           ))}

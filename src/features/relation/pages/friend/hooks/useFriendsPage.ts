@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Recommendations } from '../../../../../shared/infra/services/relation/interface';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
 import {
+  blockUser,
   getRecommendationsByProfile,
   requestFriendShip,
 } from '../../../../../shared/infra/services/relation/recommendationService';
@@ -55,6 +56,29 @@ export const useFriendsPage = () => {
     [user, recommendations],
   );
 
+  const blockUserAction = useCallback(
+    async (toId: number) => {
+      const userId = Number.parseInt(user!.id);
+      setLoading(true);
+      return blockUser(userId, toId)
+        .then(() => {
+          setRecommendations(
+            recommendations.filter(
+              (recommendation) => recommendation.ID != toId,
+            ),
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('Erro ao blockear usuario');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [user, recommendations],
+  );
+
   return {
     state: {
       recommendations,
@@ -64,6 +88,7 @@ export const useFriendsPage = () => {
     actions: {
       fetchRecommendations,
       addFriendShip,
+      blockUserAction,
     },
   };
 };
