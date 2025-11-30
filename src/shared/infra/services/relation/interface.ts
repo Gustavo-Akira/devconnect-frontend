@@ -9,14 +9,14 @@ export type Recommendations = {
 export type RelationRequest = {
   FromId: number;
   TargetId: number;
-  RelationType: 'FRIEND' | 'BLOCKED';
+  RelationType: 'FRIEND' | 'BLOCK';
 };
 
 export type Relation = {
   relation: {
     FromId: number;
     TargetId: number;
-    RelationType: 'FRIEND' | 'BLOCKED';
+    RelationType: 'FRIEND' | 'BLOCK';
     Status: string;
   };
 };
