@@ -1,6 +1,7 @@
 import { vi, type Mock } from 'vitest';
 import { relationApi } from '../../../api';
 import {
+  blockUser,
   getRecommendationsByProfile,
   requestFriendShip,
 } from '../recommendationService';
@@ -85,6 +86,36 @@ describe('recommendationService test', () => {
       await expect(requestFriendShip(fromId, toId)).rejects.toThrow(
         validReturn,
       );
+    });
+  });
+
+  describe('blockUser', () => {
+    it('should create Relation Friendship with valid ids', async () => {
+      const fromId: number = 1;
+      const toId: number = 2;
+      const mockApiPost = relationApi.post as Mock;
+      const validReturn: Relation = {
+        relation: {
+          FromId: fromId,
+          TargetId: toId,
+          RelationType: 'BLOCK',
+          Status: 'ACCEPTED',
+        },
+      };
+
+      mockApiPost.mockResolvedValueOnce({ data: validReturn });
+      const returnedData = await blockUser(fromId, toId);
+      expect(returnedData).toBe(validReturn);
+    });
+
+    it('should thrown an error when post return an error', async () => {
+      const fromId: number = 1;
+      const toId: number = 2;
+      const mockApiPost = relationApi.post as Mock;
+      const validReturn = new Error('error');
+
+      mockApiPost.mockRejectedValueOnce(validReturn);
+      await expect(blockUser(fromId, toId)).rejects.toThrow(validReturn);
     });
   });
 });
