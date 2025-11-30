@@ -7,7 +7,7 @@ import {
   blockUser,
   getRecommendationsByProfile,
   requestFriendShip,
-} from '../../../../../../shared/infra/services/relation/recommendationService';
+} from '../../../../../../shared/infra/services/relation/relationService';
 
 vi.mock(
   '../../../../../../shared/context/auth/authContext',
@@ -18,7 +18,7 @@ vi.mock(
 );
 
 vi.mock(
-  '../../../../../../shared/infra/services/relation/recommendationService',
+  '../../../../../../shared/infra/services/relation/relationService',
   () => ({
     getRecommendationsByProfile: vi.fn(),
     requestFriendShip: vi.fn(),

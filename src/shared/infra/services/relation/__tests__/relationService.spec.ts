@@ -2,9 +2,10 @@ import { vi, type Mock } from 'vitest';
 import { relationApi } from '../../../api';
 import {
   blockUser,
+  getAllRelationsByUser,
   getRecommendationsByProfile,
   requestFriendShip,
-} from '../recommendationService';
+} from '../relationService';
 import type { Relation } from '../interface';
 
 vi.mock('../../../api', () => ({
@@ -118,4 +119,31 @@ describe('recommendationService test', () => {
       await expect(blockUser(fromId, toId)).rejects.toThrow(validReturn);
     });
   });
+  describe("getRelationsByUser",()=>{
+    it("should get Relaitons by user",async ()=>{
+      const id = 1;
+      const mockApiGet = relationApi.get as Mock;
+      const validReturn = [{
+        relation: {
+          FromId: id,
+          TargetId: 25,
+          RelationType: 'BLOCK',
+          Status: 'ACCEPTED',
+        },
+      }];
+      mockApiGet.mockResolvedValueOnce({data: validReturn});
+
+      const result = await getAllRelationsByUser(id)
+      expect(result).toBe(validReturn);
+    });
+
+    it("should throw error",async ()=>{
+      const id = 1;
+      const mockApiGet = relationApi.get as Mock;
+      const validReturn = new Error("error")
+      mockApiGet.mockRejectedValueOnce(validReturn);
+
+      await expect(getAllRelationsByUser(id)).rejects.toThrow(validReturn);
+    });
+  })
 });
