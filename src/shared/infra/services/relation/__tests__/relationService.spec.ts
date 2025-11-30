@@ -119,31 +119,33 @@ describe('recommendationService test', () => {
       await expect(blockUser(fromId, toId)).rejects.toThrow(validReturn);
     });
   });
-  describe("getRelationsByUser",()=>{
-    it("should get Relaitons by user",async ()=>{
+  describe('getRelationsByUser', () => {
+    it('should get Relaitons by user', async () => {
       const id = 1;
       const mockApiGet = relationApi.get as Mock;
-      const validReturn = [{
-        relation: {
-          FromId: id,
-          TargetId: 25,
-          RelationType: 'BLOCK',
-          Status: 'ACCEPTED',
+      const validReturn = [
+        {
+          relation: {
+            FromId: id,
+            TargetId: 25,
+            RelationType: 'BLOCK',
+            Status: 'ACCEPTED',
+          },
         },
-      }];
-      mockApiGet.mockResolvedValueOnce({data: validReturn});
+      ];
+      mockApiGet.mockResolvedValueOnce({ data: validReturn });
 
-      const result = await getAllRelationsByUser(id)
+      const result = await getAllRelationsByUser(id);
       expect(result).toBe(validReturn);
     });
 
-    it("should throw error",async ()=>{
+    it('should throw error', async () => {
       const id = 1;
       const mockApiGet = relationApi.get as Mock;
-      const validReturn = new Error("error")
+      const validReturn = new Error('error');
       mockApiGet.mockRejectedValueOnce(validReturn);
 
       await expect(getAllRelationsByUser(id)).rejects.toThrow(validReturn);
     });
-  })
+  });
 });

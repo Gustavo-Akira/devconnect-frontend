@@ -21,15 +21,15 @@ export const blockUser = async (id: number, toId: number) => {
   return await createRelationRequest(id, toId, 'BLOCK');
 };
 
-export const getAllRelationsByUser = async (id:number) =>{
-  try{
-    const {data} = await relationApi.get<Relation[]>(`/relation/${id}`)
+export const getAllRelationsByUser = async (id: number) => {
+  try {
+    const { data } = await relationApi.get<Relation[]>(`/relation/${id}`);
     return data;
-  }catch(error){
+  } catch (error) {
     console.error(error);
-    throw error
+    throw error;
   }
-}
+};
 
 const createRelationRequest = async (
   id: number,
