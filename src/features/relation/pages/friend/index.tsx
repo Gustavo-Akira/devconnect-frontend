@@ -15,7 +15,7 @@ export const FriendsPage = () => {
   const { state, actions } = useFriendsPage();
 
   const { loading, error, recommendations } = state;
-  const { fetchRecommendations } = actions;
+  const { fetchRecommendations, addFriendShip } = actions;
 
   return (
     <Container sx={{ py: 4 }}>
@@ -60,10 +60,12 @@ export const FriendsPage = () => {
           {recommendations.map((rec) => (
             <Grid size={{ md: 6, xs: 12 }} key={rec.ID}>
               <ProfileCard
+                id={rec.ID}
                 name={rec.Name}
                 city={rec.City}
                 score={rec.Score}
                 stacks={rec.Stacks}
+                onAddFriend={addFriendShip}
               />
             </Grid>
           ))}
