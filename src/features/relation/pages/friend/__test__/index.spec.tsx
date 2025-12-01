@@ -2,7 +2,7 @@ import { vi, type Mock } from 'vitest';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
 import { render, screen, waitFor } from '@testing-library/react';
 import { FriendsPage } from '..';
-import { getRecommendationsByProfile } from '../../../../../shared/infra/services/relation/recommendationService';
+import { getRecommendationsByProfile } from '../../../../../shared/infra/services/relation/relationService';
 
 vi.mock(
   '../../../../../shared/context/auth/authContext',
@@ -18,7 +18,7 @@ vi.mock('react-router-dom', async (importOriginal) => ({
 }));
 
 vi.mock(
-  '../../../../../shared/infra/services/relation/recommendationService',
+  '../../../../../shared/infra/services/relation/relationService',
   () => ({
     getRecommendationsByProfile: vi.fn(),
   }),

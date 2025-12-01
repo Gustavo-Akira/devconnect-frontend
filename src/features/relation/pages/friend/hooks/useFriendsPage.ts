@@ -5,7 +5,7 @@ import {
   blockUser,
   getRecommendationsByProfile,
   requestFriendShip,
-} from '../../../../../shared/infra/services/relation/recommendationService';
+} from '../../../../../shared/infra/services/relation/relationService';
 
 export const useFriendsPage = () => {
   const { user } = useAuth();
