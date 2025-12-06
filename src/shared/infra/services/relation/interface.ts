@@ -13,10 +13,14 @@ export type RelationRequest = {
 };
 
 export type Relation = {
-  relation: {
-    FromId: number;
-    TargetId: number;
-    RelationType: 'FRIEND' | 'BLOCK';
-    Status: string;
-  };
+  FromId: number;
+  TargetId: number;
+  FromProfileName: string;
+  ToProfileName: string;
+  RelationType: 'FRIEND' | 'BLOCK';
+  Status: string;
+};
+
+export type RelationsResponse = {
+  relations: Relation[];
 };
