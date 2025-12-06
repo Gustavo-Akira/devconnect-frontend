@@ -6,7 +6,7 @@ import {
   getRecommendationsByProfile,
   requestFriendShip,
 } from '../relationService';
-import type { Relation } from '../interface';
+import type { Relation, RelationsResponse } from '../interface';
 
 vi.mock('../../../api', () => ({
   relationApi: {
@@ -63,13 +63,17 @@ describe('recommendationService test', () => {
       const fromId: number = 1;
       const toId: number = 2;
       const mockApiPost = relationApi.post as Mock;
-      const validReturn: Relation = {
-        relation: {
-          FromId: fromId,
-          TargetId: toId,
-          RelationType: 'FRIEND',
-          Status: 'PENDING',
-        },
+      const validReturn: RelationsResponse = {
+        relations: [
+          {
+            FromId: fromId,
+            TargetId: toId,
+            RelationType: 'FRIEND',
+            Status: 'PENDING',
+            FromProfileName: 'akira',
+            ToProfileName: 'kira',
+          },
+        ],
       };
 
       mockApiPost.mockResolvedValueOnce({ data: validReturn });
@@ -96,12 +100,12 @@ describe('recommendationService test', () => {
       const toId: number = 2;
       const mockApiPost = relationApi.post as Mock;
       const validReturn: Relation = {
-        relation: {
-          FromId: fromId,
-          TargetId: toId,
-          RelationType: 'BLOCK',
-          Status: 'ACCEPTED',
-        },
+        FromId: fromId,
+        TargetId: toId,
+        RelationType: 'BLOCK',
+        FromProfileName: 'akira',
+        ToProfileName: 'kira',
+        Status: 'ACCEPTED',
       };
 
       mockApiPost.mockResolvedValueOnce({ data: validReturn });

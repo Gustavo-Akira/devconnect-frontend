@@ -1,5 +1,10 @@
 import { relationApi } from '../../api';
-import type { Recommendations, Relation, RelationRequest } from './interface';
+import type {
+  Recommendations,
+  Relation,
+  RelationRequest,
+  RelationsResponse,
+} from './interface';
 
 export const getRecommendationsByProfile = async (id: number) => {
   try {
@@ -23,7 +28,9 @@ export const blockUser = async (id: number, toId: number) => {
 
 export const getAllRelationsByUser = async (id: number) => {
   try {
-    const { data } = await relationApi.get<Relation[]>(`/relation/${id}`);
+    const { data } = await relationApi.get<RelationsResponse>(
+      `/relation/${id}`,
+    );
     return data;
   } catch (error) {
     console.error(error);
