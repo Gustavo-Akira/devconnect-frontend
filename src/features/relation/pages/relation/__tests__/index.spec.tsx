@@ -30,7 +30,10 @@ describe('RelationPage', () => {
     (useAuth as Mock).mockReturnValue({ user: { id: '10' } });
 
     (getAllRelationsByUser as jest.Mock).mockResolvedValue({
-      relations: [{ ToProfileName: 'Alice' }, { ToProfileName: 'Bruno' }],
+      Data: [
+        { ToProfileName: 'Alice', ToID: 12 },
+        { ToProfileName: 'Bruno', ToID: 14 },
+      ],
     });
 
     render(<RelationPage />);
