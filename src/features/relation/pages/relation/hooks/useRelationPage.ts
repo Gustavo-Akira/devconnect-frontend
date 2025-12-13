@@ -10,17 +10,18 @@ export const useRelationPage = () => {
   const { user } = useAuth();
   const [relations, setRelations] = useState<RelationsResponse>();
   const [loading, setLoading] = useState<boolean>();
+  const [page, setPage] = useState<number>(0);
   useEffect(() => {
     const userId = Number.parseInt(user!.id);
     setLoading(true);
-    getAllRelationsByUser(userId)
+    getAllRelationsByUser(userId, page)
       .then((relations) => {
         setRelations(relations);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [user]);
+  }, [user, page]);
   const blockAction = useCallback(
     (id: number) => {
       const userId = parseInt(user!.id);
@@ -31,14 +32,21 @@ export const useRelationPage = () => {
   const profileAction = (id: number) => {
     console.log(id);
   };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
   return {
     state: {
       relations,
       loading,
+      page,
     },
     actions: {
       blockAction,
       profileAction,
+      handlePageChange,
     },
   };
 };

@@ -80,7 +80,7 @@ describe('useRelationPage', () => {
     });
 
     expect(getAllRelationsByUser).toHaveBeenCalledOnce();
-    expect(getAllRelationsByUser).toHaveBeenCalledWith(1);
+    expect(getAllRelationsByUser).toHaveBeenCalledWith(1, 0);
 
     expect(result.current.state.relations).toEqual(mockRelations);
   });
@@ -108,5 +108,17 @@ describe('useRelationPage', () => {
     });
 
     expect(() => result.current.actions.profileAction(99)).not.toThrow();
+  });
+
+  it('should change page when handlePageChange is called', async () => {
+    const { result } = renderHook(() => useRelationPage());
+    await waitFor(() => {
+      expect(result.current.state.loading).toBe(false);
+    });
+
+    act(() => {
+      result.current.actions.handlePageChange(2);
+    });
+    expect(result.current.state.page).toBe(2);
   });
 });
