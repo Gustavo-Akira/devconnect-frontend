@@ -24,8 +24,8 @@ export type Relation = {
 export type RelationsResponse = {
   Data: Relation[];
   Page: number;
-  TotalItems: number,
-  TotalPages: number,
-  HasNext: boolean,
-  HasPrevious: boolean
+  TotalItems: number;
+  TotalPages: number;
+  HasNext: boolean;
+  HasPrevious: boolean;
 };
