@@ -64,7 +64,7 @@ describe('recommendationService test', () => {
       const toId: number = 2;
       const mockApiPost = relationApi.post as Mock;
       const validReturn: RelationsResponse = {
-        relations: [
+        Data: [
           {
             FromId: fromId,
             TargetId: toId,
@@ -74,6 +74,11 @@ describe('recommendationService test', () => {
             ToProfileName: 'kira',
           },
         ],
+        HasNext: false,
+        HasPrevious: false,
+        Page: 1,
+        TotalItems: 1,
+        TotalPages: 1,
       };
 
       mockApiPost.mockResolvedValueOnce({ data: validReturn });
