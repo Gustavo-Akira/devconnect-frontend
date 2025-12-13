@@ -26,10 +26,10 @@ export const blockUser = async (id: number, toId: number) => {
   return await createRelationRequest(id, toId, 'BLOCK');
 };
 
-export const getAllRelationsByUser = async (id: number) => {
+export const getAllRelationsByUser = async (id: number, page?: number) => {
   try {
     const { data } = await relationApi.get<RelationsResponse>(
-      `/relation/${id}`,
+      `/relation/${id}?page=${page ?? 0}`,
     );
     return data;
   } catch (error) {

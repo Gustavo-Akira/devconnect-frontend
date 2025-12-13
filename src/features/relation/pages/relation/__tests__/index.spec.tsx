@@ -22,7 +22,7 @@ describe('RelationPage', () => {
     render(<RelationPage />);
 
     await waitFor(() => {
-      expect(getAllRelationsByUser).toHaveBeenCalledWith(10);
+      expect(getAllRelationsByUser).toHaveBeenCalledWith(10, 0);
     });
   });
 

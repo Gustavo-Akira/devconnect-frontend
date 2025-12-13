@@ -48,6 +48,12 @@ export const RelationPage = () => {
         loading={state.loading}
         getRowId={(prop) => prop.ToID}
         pageSizeOptions={[20]}
+        onPaginationModelChange={(model) => {
+          if (model.page !== state.page) {
+            console.log(model.page);
+            actions.handlePageChange(model.page);
+          }
+        }}
       />
     </Container>
   );
