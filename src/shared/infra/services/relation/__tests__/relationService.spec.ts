@@ -1,7 +1,9 @@
 import { vi, type Mock } from 'vitest';
 import { relationApi } from '../../../api';
 import {
+  acceptRelationRequest,
   blockUser,
+  getAllPendingRelationsByUser,
   getAllRelationsByUser,
   getRecommendationsByProfile,
   requestFriendShip,
@@ -12,6 +14,7 @@ vi.mock('../../../api', () => ({
   relationApi: {
     get: vi.fn(),
     post: vi.fn(),
+    patch: vi.fn(),
   },
 }));
 
@@ -155,6 +158,66 @@ describe('recommendationService test', () => {
       mockApiGet.mockRejectedValueOnce(validReturn);
 
       await expect(getAllRelationsByUser(id)).rejects.toThrow(validReturn);
+    });
+  });
+
+  describe('getAllPendingRelationsByUser', () => {
+    it('should get pending relations by user', async () => {
+      const id = 1;
+      const mockRelations: Relation[] = [
+        {
+          FromId: 2,
+          TargetId: id,
+          RelationType: 'FRIEND',
+          Status: 'PENDING',
+          FromProfileName: 'user2',
+          ToProfileName: 'user1',
+        },
+      ];
+      const mockApiGet = relationApi.get as Mock;
+      mockApiGet.mockResolvedValueOnce({ data: { relations: mockRelations } });
+
+      const result = await getAllPendingRelationsByUser(id);
+      expect(result).toBe(mockRelations);
+    });
+
+    it('should throw error', async () => {
+      const id = 1;
+      const mockApiGet = relationApi.get as Mock;
+      const error = new Error('error');
+      mockApiGet.mockRejectedValueOnce(error);
+
+      await expect(getAllPendingRelationsByUser(id)).rejects.toThrow(error);
+    });
+  });
+
+  describe('acceptRelationRequest', () => {
+    it('should accept relation request', async () => {
+      const id = 1;
+      const fromId = 2;
+      const mockRelation: Relation = {
+        FromId: fromId,
+        TargetId: id,
+        RelationType: 'FRIEND',
+        Status: 'ACCEPTED',
+        FromProfileName: 'user2',
+        ToProfileName: 'user1',
+      };
+      const mockApiPatch = relationApi.patch as Mock;
+      mockApiPatch.mockResolvedValueOnce({ data: mockRelation });
+
+      const result = await acceptRelationRequest(id, fromId);
+      expect(result).toBe(mockRelation);
+    });
+
+    it('should throw error when put returns an error', async () => {
+      const id = 1;
+      const fromId = 2;
+      const mockApiPatch = relationApi.patch as Mock;
+      const error = new Error('error');
+      mockApiPatch.mockRejectedValueOnce(error);
+
+      await expect(acceptRelationRequest(id, fromId)).rejects.toThrow(error);
     });
   });
 });

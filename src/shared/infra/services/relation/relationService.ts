@@ -38,6 +38,18 @@ export const getAllRelationsByUser = async (id: number, page?: number) => {
   }
 };
 
+export const getAllPendingRelationsByUser = async (id: number) => {
+  try {
+    const { data } = await relationApi.get<{ relations: Relation[] }>(
+      `/relation/pending/${id}`,
+    );
+    return data.relations;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const createRelationRequest = async (
   id: number,
   toId: number,
@@ -57,6 +69,26 @@ const createRelationRequest = async (
       id,
       toId,
       relationType,
+    );
+    throw error;
+  }
+};
+
+export const acceptRelationRequest = async (
+  id: number,
+  fromId: number,
+): Promise<Relation> => {
+  try {
+    const { data } = await relationApi.patch<Relation>(
+      `/relation/accept/${fromId}/${id}`,
+      {},
+    );
+    return data;
+  } catch (error) {
+    console.error(
+      'Error accepting relation request for user #%d from profile #%d',
+      id,
+      fromId,
     );
     throw error;
   }
