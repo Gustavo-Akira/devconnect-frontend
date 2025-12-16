@@ -4,6 +4,8 @@ import { useAuth } from '../../../../../../shared/context/auth/authContext';
 import {
   blockUser,
   getAllRelationsByUser,
+  getAllPendingRelationsByUser,
+  acceptRelationRequest,
 } from '../../../../../../shared/infra/services/relation/relationService';
 import { useRelationPage } from '../useRelationPage';
 import type { RelationsResponse } from '../../../../../../shared/infra/services/relation/interface';
@@ -67,6 +69,16 @@ describe('useRelationPage', () => {
       RelationType: 'FRIEND',
       Status: 'ACCEPTED',
     });
+
+    vi.mocked(getAllPendingRelationsByUser).mockResolvedValue([]);
+    vi.mocked(acceptRelationRequest).mockResolvedValue({
+      FromId: 0,
+      TargetId: 0,
+      FromProfileName: '',
+      ToProfileName: '',
+      RelationType: 'FRIEND',
+      Status: '',
+    });
   });
 
   it('should fetch relations on mount', async () => {
@@ -120,5 +132,32 @@ describe('useRelationPage', () => {
       result.current.actions.handlePageChange(2);
     });
     expect(result.current.state.page).toBe(2);
+  });
+
+  it('should fetch pending requests on mount', async () => {
+    const { result } = renderHook(() => useRelationPage());
+
+    await waitFor(() => {
+      expect(result.current.state.loading).toBe(false);
+    });
+
+    expect(getAllPendingRelationsByUser).toHaveBeenCalledWith(1);
+    expect(result.current.state.pendingRequests).toEqual([]);
+  });
+
+  it('should call acceptRelationRequest when acceptFriendRequest is invoked', async () => {
+    const { result } = renderHook(() => useRelationPage());
+
+    await waitFor(() => {
+      expect(result.current.state.loading).toBe(false);
+    });
+
+    await act(async () => {
+      result.current.actions.acceptFriendRequest(2);
+    });
+
+    expect(acceptRelationRequest).toHaveBeenCalledWith(1, 2);
+    expect(getAllPendingRelationsByUser).toHaveBeenCalledTimes(2);
+    expect(result.current.state.page).toBe(0);
   });
 });
