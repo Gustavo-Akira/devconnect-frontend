@@ -5,8 +5,8 @@ import { PrivateRoute } from '../../shared/component/privateRoute';
 import { RelationPage } from './pages/relation';
 
 export const RELATIONS_PATHS = {
-  RELATION: 'relations',
-  FRIENDS: 'relations/friends',
+  RELATION: '/relations',
+  FRIENDS: '/relations/friends',
 };
 
 export const RELATIONS_ROUTE: RouteObject[] = [
