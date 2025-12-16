@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
 vi.mock('../../../hooks/useUserInfo', () => ({ useUserInfo: vi.fn() }));
 
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -11,7 +11,7 @@ import { useUserInfo } from '../../../hooks/useUserInfo';
 
 describe('Header Component', () => {
   it('should toggle the navigation menu on mobile view when the header is clicked', async () => {
-    (useUserInfo as any).mockReturnValue({ isAuthenticated: false });
+    (useUserInfo as Mock).mockReturnValue({ isAuthenticated: false });
 
     render(
       <MemoryRouter>
@@ -28,7 +28,7 @@ describe('Header Component', () => {
   });
 
   it('should display navigation links', () => {
-    (useUserInfo as any).mockReturnValue({ isAuthenticated: false });
+    (useUserInfo as Mock).mockReturnValue({ isAuthenticated: false });
 
     render(
       <MemoryRouter>
