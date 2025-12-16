@@ -1,7 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
-import { getAllRelationsByUser } from '../../../../../shared/infra/services/relation/relationService';
+import {
+  getAllPendingRelationsByUser,
+  getAllRelationsByUser,
+} from '../../../../../shared/infra/services/relation/relationService';
 import { RelationPage } from '..';
 
 vi.mock('../../../../../shared/context/auth/authContext');
@@ -16,6 +19,10 @@ describe('RelationPage', () => {
     (useAuth as Mock).mockReturnValue({ user: { id: '10' } });
 
     (getAllRelationsByUser as jest.Mock).mockResolvedValue({
+      relations: [],
+    });
+
+    (getAllPendingRelationsByUser as jest.Mock).mockResolvedValue({
       relations: [],
     });
 
@@ -36,9 +43,22 @@ describe('RelationPage', () => {
       ],
     });
 
-    render(<RelationPage />);
+    (getAllPendingRelationsByUser as jest.Mock).mockResolvedValue({
+      relations: [
+        {
+          FromProfileName: 'Akira',
+          FromID: 25,
+          Type: 'FRIEND',
+          Status: 'PENDING',
+        },
+      ],
+    });
 
-    expect(await screen.findByText('Alice')).toBeInTheDocument();
-    expect(await screen.findByText('Bruno')).toBeInTheDocument();
+    render(<RelationPage />);
+    waitFor(() => {
+      expect(screen.findByText('Alice')).toBeInTheDocument();
+      expect(screen.findByText('Bruno')).toBeInTheDocument();
+      expect(screen.findByText('Akira')).toBeInTheDocument();
+    });
   });
 });
