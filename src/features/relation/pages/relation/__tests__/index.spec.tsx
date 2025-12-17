@@ -18,11 +18,11 @@ describe('RelationPage', () => {
   it('deve chamar getAllRelationsByUser com o ID do usuário', async () => {
     (useAuth as Mock).mockReturnValue({ user: { id: '10' } });
 
-    (getAllRelationsByUser as jest.Mock).mockResolvedValue({
+    (getAllRelationsByUser as Mock).mockResolvedValue({
       relations: [],
     });
 
-    (getAllPendingRelationsByUser as jest.Mock).mockResolvedValue({
+    (getAllPendingRelationsByUser as Mock).mockResolvedValue({
       relations: [],
     });
 
@@ -36,14 +36,14 @@ describe('RelationPage', () => {
   it('deve renderizar os nomes das relações retornadas', async () => {
     (useAuth as Mock).mockReturnValue({ user: { id: '10' } });
 
-    (getAllRelationsByUser as jest.Mock).mockResolvedValue({
+    (getAllRelationsByUser as Mock).mockResolvedValue({
       Data: [
         { ToProfileName: 'Alice', ToID: 12 },
         { ToProfileName: 'Bruno', ToID: 14 },
       ],
     });
 
-    (getAllPendingRelationsByUser as jest.Mock).mockResolvedValue({
+    (getAllPendingRelationsByUser as Mock).mockResolvedValue({
       relations: [
         {
           FromProfileName: 'Akira',
@@ -56,9 +56,9 @@ describe('RelationPage', () => {
 
     render(<RelationPage />);
     waitFor(() => {
-      expect(screen.findByText('Alice')).toBeInTheDocument();
-      expect(screen.findByText('Bruno')).toBeInTheDocument();
-      expect(screen.findByText('Akira')).toBeInTheDocument();
+      expect(screen.getByText('Alice')).toBeInTheDocument();
+      expect(screen.getByText('Bruno')).toBeInTheDocument();
+      expect(screen.getByText('Akira')).toBeInTheDocument();
     });
   });
 });

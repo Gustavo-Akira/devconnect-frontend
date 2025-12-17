@@ -1,11 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, type Mock } from 'vitest';
 import { AuthProvider, useAuth } from '../authContext';
-import { useUserInfo } from '../../../hooks/useUserInfo';
 import type { User } from '../../../types/user';
+import { api } from '../../../infra/api';
 
-vi.mock('../../../hooks/useUserInfo', () => ({
-  useUserInfo: vi.fn(),
+vi.mock('../../../infra/api', () => ({
+  api: {
+    get: vi.fn(),
+  },
 }));
 
 const Consumer = () => {
@@ -21,7 +23,7 @@ const Consumer = () => {
 
 describe('AuthProvider', () => {
   it('should render user name and yes when authenticated ', () => {
-    (useUserInfo as Mock).mockReturnValue({
+    (api.get as Mock).mockReturnValue({
       user: { id: '1', name: 'Gustavo' } as User,
       loading: false,
     });
@@ -31,14 +33,15 @@ describe('AuthProvider', () => {
         <Consumer />
       </AuthProvider>,
     );
-
-    expect(screen.getByTestId('user').textContent).toBe('Gustavo');
-    expect(screen.getByTestId('loading').textContent).toBe('not-loading');
-    expect(screen.getByTestId('auth').textContent).toBe('yes');
+    waitFor(() => {
+      expect(screen.getByTestId('user').textContent).toBe('Gustavo');
+      expect(screen.getByTestId('loading').textContent).toBe('not-loading');
+      expect(screen.getByTestId('auth').textContent).toBe('yes');
+    });
   });
 
   it('should render no-user and no without user', () => {
-    (useUserInfo as Mock).mockReturnValue({
+    (api.get as Mock).mockReturnValue({
       user: null,
       loading: false,
     });
@@ -48,14 +51,15 @@ describe('AuthProvider', () => {
         <Consumer />
       </AuthProvider>,
     );
-
-    expect(screen.getByTestId('user').textContent).toBe('no-user');
-    expect(screen.getByTestId('loading').textContent).toBe('not-loading');
-    expect(screen.getByTestId('auth').textContent).toBe('no');
+    waitFor(() => {
+      expect(screen.getByTestId('user').textContent).toBe('no-user');
+      expect(screen.getByTestId('loading').textContent).toBe('not-loading');
+      expect(screen.getByTestId('auth').textContent).toBe('no');
+    });
   });
 
   it('should render when is loading', () => {
-    (useUserInfo as Mock).mockReturnValue({
+    (api.get as Mock).mockReturnValue({
       user: null,
       loading: true,
     });

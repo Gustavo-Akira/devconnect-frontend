@@ -7,12 +7,22 @@ import { Header } from '../index';
 import { theme } from '../../../../app/theme';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import { useUserInfo } from '../../../hooks/useUserInfo';
+import { useAuth } from '../../../context/auth/authContext';
+
+vi.mock('../../../context/auth/authContext');
 
 describe('Header Component', () => {
-  it('should toggle the navigation menu on mobile view when the header is clicked', async () => {
-    (useUserInfo as Mock).mockReturnValue({ isAuthenticated: false });
+  beforeEach(() => {
+    (useAuth as Mock).mockReturnValue({
+      user: null,
+      loading: false,
+      isAuthenticated: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
+  });
 
+  it('should toggle the navigation menu', () => {
     render(
       <MemoryRouter>
         <ThemeProvider theme={theme}>
@@ -21,15 +31,14 @@ describe('Header Component', () => {
       </MemoryRouter>,
     );
 
-    const headerContainer = screen.getByRole('header');
     expect(screen.getByTestId('menu-closed')).toBeInTheDocument();
-    fireEvent.click(headerContainer);
+
+    fireEvent.click(screen.getByRole('header'));
+
     expect(screen.getByTestId('menu-open')).toBeInTheDocument();
   });
 
-  it('should display navigation links', () => {
-    (useUserInfo as Mock).mockReturnValue({ isAuthenticated: false });
-
+  it('should display auth links when not authenticated', () => {
     render(
       <MemoryRouter>
         <ThemeProvider theme={theme}>

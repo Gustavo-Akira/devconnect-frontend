@@ -58,6 +58,8 @@ describe('useRelationPage', () => {
       isAuthenticated: true,
       user: mockUser,
       loading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
     });
 
     vi.mocked(getAllRelationsByUser).mockResolvedValue(mockRelations);

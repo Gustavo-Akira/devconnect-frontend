@@ -10,9 +10,11 @@ import { AccountCircle, Book, ExitToAppSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { PROFILE_PATHS } from '../../route';
 import { logout } from '../../../../shared/infra/services/auth/authService';
+import { useAuth } from '../../../../shared/context/auth/authContext';
 
 export const SideMenu = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   return (
     <SideMenuContainer>
       <SideMenuProfileContainer>
@@ -42,6 +44,7 @@ export const SideMenu = () => {
         <SideMenuLink
           onClick={() => {
             logout().then(() => {
+              auth.logout();
               navigate('/');
             });
           }}
