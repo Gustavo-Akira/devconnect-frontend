@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { signin } from '../../../../../shared/infra/services/auth/authService';
 import { useNavigate } from 'react-router-dom';
 import { PROFILE_PATHS } from '../../../../profile/route';
+import { useAuth } from '../../../../../shared/context/auth/authContext';
 
 export const useSigninPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleForgotPassword = () => {
@@ -24,7 +25,8 @@ export const useSigninPage = () => {
     setError(null);
     console.log('Tentativa de login com:', { email, password });
     signin(email, password)
-      .then(() => {
+      .then(async () => {
+        await login();
         navigate(PROFILE_PATHS.PROFILE);
       })
       .catch((error) => {

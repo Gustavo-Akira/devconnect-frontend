@@ -3,11 +3,19 @@ import { useSigninPage } from '../useSigninPage';
 import { signin } from '../../../../../../shared/infra/services/auth/authService';
 import { vi, type Mock } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { useAuth } from '../../../../../../shared/context/auth/authContext';
 
 vi.mock('../../../../../../shared/infra/services/auth/authService');
-
+vi.mock('../../../../../../shared/context/auth/authContext');
 describe('useSigninPage', () => {
   const mockSignin = signin as Mock;
+  (useAuth as Mock).mockReturnValue({
+    login: vi.fn(),
+    user: null,
+    loading: false,
+    isAuthenticated: false,
+    logout: vi.fn(),
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -32,7 +40,6 @@ describe('useSigninPage', () => {
       await result.current.actions.handleSignIn();
     });
 
-    // se o hook usa navigate('/home'), você pode verificar pelo estado de error/redirect
     expect(result.current.state.error).toBeNull();
   });
 });

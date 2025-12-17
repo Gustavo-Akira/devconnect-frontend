@@ -5,10 +5,13 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../../../../app/theme';
 import { PROFILE_PATHS } from '../../../route';
 import { vi } from 'vitest';
+import { AuthProvider } from '../../../../../shared/context/auth/authContext';
 const renderWithTheme = () => {
   return render(
     <ThemeProvider theme={theme}>
-      <SideMenu />
+      <AuthProvider>
+        <SideMenu />
+      </AuthProvider>
     </ThemeProvider>,
   );
 };

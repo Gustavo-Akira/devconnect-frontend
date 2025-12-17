@@ -10,12 +10,12 @@ import {
 } from './styled';
 import { AUTH_PATHS } from '../../../features/auth/route';
 import { router } from '../../routes';
-import { useUserInfo } from '../../hooks/useUserInfo';
 import { RELATIONS_PATHS } from '../../../features/relation/route';
 import { PROFILE_PATHS } from '../../../features/profile/route';
+import { useAuth } from '../../context/auth/authContext';
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated } = useUserInfo();
+  const { user } = useAuth();
   return (
     <HeaderContainer role="header" onClick={() => setMenuOpen(!menuOpen)}>
       <HeaderContent>
@@ -26,7 +26,7 @@ export const Header = () => {
           data-testid={menuOpen ? 'menu-open' : 'menu-closed'}
         >
           <NavList>
-            {!isAuthenticated && (
+            {user == null && (
               <>
                 <NavItem>
                   <NavLink
@@ -44,7 +44,7 @@ export const Header = () => {
                 </NavItem>
               </>
             )}
-            {isAuthenticated && (
+            {user != null && (
               <>
                 <NavItem>
                   <NavLink
