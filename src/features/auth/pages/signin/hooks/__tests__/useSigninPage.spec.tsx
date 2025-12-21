@@ -21,7 +21,9 @@ describe('useSigninPage', () => {
   });
 
   const mockShowNotification = vi.fn();
-  (useNotification as Mock).mockReturnValue({ showNotification: mockShowNotification });
+  (useNotification as Mock).mockReturnValue({
+    showNotification: mockShowNotification,
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -48,7 +50,10 @@ describe('useSigninPage', () => {
 
     expect(result.current.state.error).toBeNull();
     expect(loginMock).toHaveBeenCalled();
-    expect(mockShowNotification).toHaveBeenCalledWith('Login realizado com sucesso!', 'success');
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Login realizado com sucesso!',
+      'success',
+    );
   });
 
   it('sets error when email or password is missing', () => {

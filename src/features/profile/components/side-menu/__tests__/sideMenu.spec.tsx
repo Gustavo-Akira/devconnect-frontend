@@ -5,13 +5,10 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from '../../../../../app/theme';
 import { PROFILE_PATHS } from '../../../route';
 import { vi } from 'vitest';
-import { AuthProvider } from '../../../../../shared/context/auth/authContext';
 const renderWithTheme = () => {
   return render(
     <ThemeProvider theme={theme}>
-      <AuthProvider>
         <SideMenu />
-      </AuthProvider>
     </ThemeProvider>,
   );
 };
@@ -24,7 +21,18 @@ vi.mock('react-router-dom', async (actual) => ({
 vi.mock('../../../../../shared/infra/services/auth/authService', () => ({
   logout: () => Promise.resolve(),
 }));
-
+vi.mock('../../../../../shared/context/auth/authContext', () => ({
+  useAuth: () => ({
+    login: vi.fn(() => Promise.resolve()),
+    user: {
+      name: 'Gustavo Akira Uekita',
+      email: 'akirauekita@gmail.com',
+    },
+    loading: false,
+    isAuthenticated: true,
+    logout: vi.fn(() => Promise.resolve()),
+  }),
+}));
 describe('SideMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -12,7 +12,7 @@ export const useSigninPage = () => {
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { showNotification} = useNotification();
+  const { showNotification } = useNotification();
 
   const handleForgotPassword = () => {
     console.log('Recuperação de senha solicitada para:', email);
