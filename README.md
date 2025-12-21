@@ -112,14 +112,12 @@ npm run test
 
 O build é feito com Vite (`npm run build`). Ajuste a configuração de deploy conforme o ambiente (CDN, Netlify, Vercel, servidor estático, etc.).
 
-
-
 ## Demo
 
 [![Assistir demo atual do projeto](https://img.youtube.com/vi/UMsZFdwbDxA/0.jpg)](https://youtu.be/UMsZFdwbDxA)
 
-
 ## Proximos passos
+
 - Atualizar automaticamente quando bloquear na tela de relations
 - Adicionar navegação de volta para Home
-- 
+-
