@@ -8,6 +8,15 @@ vi.mock('../../../../../shared/context/auth/authContext', () => ({
   useAuth: vi.fn(),
 }));
 
+vi.mock(
+  '../../../../../shared/context/notification/notificationContext',
+  () => ({
+    useNotification: vi.fn(() => ({
+      showNotification: vi.fn(),
+    })),
+  }),
+);
+
 describe('SignIn Component', () => {
   const loginMock = vi.fn();
 
