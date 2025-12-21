@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 const renderWithTheme = () => {
   return render(
     <ThemeProvider theme={theme}>
-        <SideMenu />
+      <SideMenu />
     </ThemeProvider>,
   );
 };
