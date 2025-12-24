@@ -1,13 +1,20 @@
 import { renderHook, act } from '@testing-library/react';
 import { useSignupPage } from '../useSignupPage';
 import { signup } from '../../../../../../shared/infra/services/auth/authService';
-import type { FormData } from '../../interface';
 import { vi, type Mock } from 'vitest';
+
+const showNotificationMock = vi.fn();
+
+vi.mock('../../../../../../shared/context/notification/notificationContext', () => ({
+  useNotification: () => ({
+    showNotification: showNotificationMock,
+  }),
+}));
+
 vi.mock('../../../../../../shared/infra/services/auth/authService', () => ({
   signup: vi.fn(),
 }));
 
-const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
 describe('useSignupPage', () => {
   beforeEach(() => {
@@ -36,35 +43,36 @@ describe('useSignupPage', () => {
     expect(result.current.state.activeStep).toBe(0);
   });
 
-  it('should alert if passwords do not match', async () => {
+  it('should show error notification if passwords do not match', async () => {
     const { result } = renderHook(() => useSignupPage());
 
     act(() => {
-      result.current.actions.setFormData((prev: FormData) => ({
+      result.current.actions.setFormData((prev) => ({
         ...prev,
-        name: 'John Doe',
-        email: 'john@example.com',
         password: '123456',
-        confirmPassword: '654321', // mismatch,
-        stack: [],
+        confirmPassword: '654321',
       }));
     });
 
     await act(async () => {
-      await result.current.actions.handleSignup();
+      result.current.actions.handleSignup();
     });
 
-    expect(alertMock).toHaveBeenCalledWith('As senhas não coincidem.');
+    expect(showNotificationMock).toHaveBeenCalledWith(
+      'As senhas não coincidem.',
+      'error',
+    );
+
     expect(signup).not.toHaveBeenCalled();
   });
 
-  it('should call signup with correct data when passwords match', async () => {
-    (signup as Mock).mockResolvedValue({ success: true });
+  it('should call signup and show success notification when passwords match', async () => {
+    (signup as Mock).mockResolvedValue({});
 
     const { result } = renderHook(() => useSignupPage());
 
     act(() => {
-      result.current.actions.setFormData((prev: FormData) => ({
+      result.current.actions.setFormData((prev) => ({
         ...prev,
         name: 'John Doe',
         email: 'john@example.com',
@@ -84,7 +92,7 @@ describe('useSignupPage', () => {
     });
 
     await act(async () => {
-      await result.current.actions.handleSignup();
+      result.current.actions.handleSignup();
     });
 
     expect(signup).toHaveBeenCalledWith(
@@ -95,15 +103,20 @@ describe('useSignupPage', () => {
         street: 'Main St 123',
       }),
     );
+
+    expect(showNotificationMock).toHaveBeenCalledWith(
+      'Cadastro realizado com sucesso!',
+      'success',
+    );
   });
 
-  it('should handle signup error gracefully', async () => {
+  it('should show error notification when signup fails', async () => {
     (signup as Mock).mockRejectedValue(new Error('API Error'));
 
     const { result } = renderHook(() => useSignupPage());
 
     act(() => {
-      result.current.actions.setFormData((prev: FormData) => ({
+      result.current.actions.setFormData((prev) => ({
         ...prev,
         name: 'Jane Doe',
         email: 'jane@example.com',
@@ -114,11 +127,12 @@ describe('useSignupPage', () => {
     });
 
     await act(async () => {
-      await result.current.actions.handleSignup();
+      result.current.actions.handleSignup();
     });
 
-    expect(alertMock).toHaveBeenCalledWith(
-      'Ocorreu um erro ao tentar se cadastrar. Tente novamente mais tarde.',
+    expect(showNotificationMock).toHaveBeenCalledWith(
+      expect.stringContaining('Erro ao realizar cadastro. Error:'),
+      'error',
     );
   });
 });
