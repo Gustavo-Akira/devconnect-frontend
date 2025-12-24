@@ -1,7 +1,18 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Signup } from '../';
+import { vi } from 'vitest';
 
 describe('Signup', () => {
+  beforeAll(() => {
+    vi.mock(
+      '../../../../../shared/context/notification/notificationContext',
+      () => ({
+        useNotification: () => ({
+          showNotification: vi.fn(),
+        }),
+      }),
+    );
+  });
   it('deve renderizar o stepper com todos os passos', () => {
     render(<Signup />);
 

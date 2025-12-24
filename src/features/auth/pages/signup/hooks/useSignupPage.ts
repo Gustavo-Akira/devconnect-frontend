@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { signup } from '../../../../../shared/infra/services/auth/authService';
 import type { SignupRequest } from '../../../../../shared/infra/services/auth/types';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
+import { formatBackendError } from '../../../../../shared/infra/utils/formatBackendError';
 export const useSignupPage = () => {
+  const { showNotification } = useNotification();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,7 +26,7 @@ export const useSignupPage = () => {
 
   const handleSignup = () => {
     if (formData.password !== formData.confirmPassword) {
-      alert('As senhas não coincidem.');
+      showNotification('As senhas não coincidem.', 'error');
       return;
     }
     const signupData: SignupRequest = {
@@ -41,13 +44,14 @@ export const useSignupPage = () => {
       stack: formData.stack,
     };
     signup(signupData)
-      .then((response) => {
-        console.log('Cadastro realizado com sucesso:', response);
+      .then(() => {
+        showNotification('Cadastro realizado com sucesso!', 'success');
       })
       .catch((error) => {
         console.error('Erro ao realizar cadastro:', error);
-        alert(
-          'Ocorreu um erro ao tentar se cadastrar. Tente novamente mais tarde.',
+        showNotification(
+          'Erro ao realizar cadastro. Error: ' + formatBackendError(error),
+          'error',
         );
       });
   };
