@@ -5,16 +5,18 @@ import { vi, type Mock } from 'vitest';
 
 const showNotificationMock = vi.fn();
 
-vi.mock('../../../../../../shared/context/notification/notificationContext', () => ({
-  useNotification: () => ({
-    showNotification: showNotificationMock,
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => ({
+    useNotification: () => ({
+      showNotification: showNotificationMock,
+    }),
   }),
-}));
+);
 
 vi.mock('../../../../../../shared/infra/services/auth/authService', () => ({
   signup: vi.fn(),
 }));
-
 
 describe('useSignupPage', () => {
   beforeEach(() => {

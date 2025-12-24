@@ -4,7 +4,7 @@ import type { SignupRequest } from '../../../../../shared/infra/services/auth/ty
 import { useNotification } from '../../../../../shared/context/notification/notificationContext';
 import { formatBackendError } from '../../../../../shared/infra/utils/formatBackendError';
 export const useSignupPage = () => {
-  const {showNotification} = useNotification();
+  const { showNotification } = useNotification();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,7 +26,7 @@ export const useSignupPage = () => {
 
   const handleSignup = () => {
     if (formData.password !== formData.confirmPassword) {
-      showNotification('As senhas não coincidem.',"error");
+      showNotification('As senhas não coincidem.', 'error');
       return;
     }
     const signupData: SignupRequest = {
@@ -49,7 +49,10 @@ export const useSignupPage = () => {
       })
       .catch((error) => {
         console.error('Erro ao realizar cadastro:', error);
-        showNotification('Erro ao realizar cadastro. Error: '+ formatBackendError(error), 'error');
+        showNotification(
+          'Erro ao realizar cadastro. Error: ' + formatBackendError(error),
+          'error',
+        );
       });
   };
 
