@@ -11,6 +11,14 @@ import { vi, type Mock } from 'vitest';
 
 vi.mock('../../../../../../shared/context/auth/authContext');
 vi.mock('../../../../../../shared/infra/services/projects/projectService');
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => ({
+    useNotification: () => ({
+      showNotification: vi.fn(),
+    }),
+  }),
+);
 
 describe('useProjectsPage', () => {
   const mockUser = { id: '123' };
@@ -43,7 +51,6 @@ describe('useProjectsPage', () => {
 
     expect(result.current.state.projects).toHaveLength(1);
     expect(result.current.state.totalElements).toBe(1);
-    expect(result.current.state.error).toBeNull();
   });
 
   it('should handle fetch error', async () => {
@@ -56,7 +63,6 @@ describe('useProjectsPage', () => {
     });
 
     expect(result.current.state.projects).toHaveLength(0);
-    expect(result.current.state.error).toBe('Failed to fetch projects');
   });
 
   it('should update page on handlePageChange', () => {

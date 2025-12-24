@@ -10,20 +10,22 @@ import type {
   CreateProjectDTO,
   Project,
 } from '../../../../../shared/infra/services/projects/interface';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
+import { formatBackendError } from '../../../../../shared/infra/utils/formatBackendError';
 
 export const useProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<number>(5);
   const [totalElements, setTotalElements] = useState<number>(0);
-  const devProfileId = useAuth().user!.id;
+  const devProfileId = String(useAuth().user!.id);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editProject, setEditProject] = useState<Project | null>(null);
   const [reloadFlag, setReloadFlag] = useState<number>(0);
-
+  const { showNotification } = useNotification();
   const reload = () => setReloadFlag((prev) => prev + 1);
+
   useEffect(() => {
     setLoading(true);
     getProjectsByDevProfileId(devProfileId, page, 5)
@@ -32,7 +34,6 @@ export const useProjectsPage = () => {
         setTotalElements(data.totalElements);
       })
       .catch((err) => {
-        setError('Failed to fetch projects');
         console.error(err);
       })
       .finally(() => {
@@ -55,9 +56,11 @@ export const useProjectsPage = () => {
       await deleteProject(id);
       setLoading(false);
       reload();
+      showNotification('Project deleted successfully', 'success');
     } catch (error) {
+      const msg = formatBackendError(error);
       console.error('error to delete project', error);
-      setError('Failed to delete the project');
+      showNotification('Failed to delete the project: ' + msg, 'error');
     }
   };
 
@@ -65,12 +68,15 @@ export const useProjectsPage = () => {
     try {
       if (editProject) {
         await editProjectCall({ ...data, id: editProject.id });
+        showNotification('Project updated successfully', 'success');
       } else {
         await createProject(data);
+        showNotification('Project created successfully', 'success');
       }
     } catch (error) {
+      const msg = formatBackendError(error);
       console.error('Error submitting project:', error);
-      setError('Failed to submit project');
+      showNotification('Failed to submit the project: ' + msg, 'error');
     }
     reload();
     setOpenModal(false);
@@ -85,7 +91,6 @@ export const useProjectsPage = () => {
     state: {
       projects,
       loading,
-      error,
       page,
       size,
       totalElements,
