@@ -147,11 +147,7 @@ export const EditProfilePage = () => {
             />
           </Grid>
         </Grid>
-        {state.error && (
-          <Grid size={{ xs: 12 }}>
-            <Typography color="error">{state.error}</Typography>
-          </Grid>
-        )}
+
         <Grid container justifyContent="flex-end" size={{ xs: 12 }}>
           <Stack direction="row" spacing={2}>
             <Button

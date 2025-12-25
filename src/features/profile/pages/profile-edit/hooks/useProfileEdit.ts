@@ -4,13 +4,15 @@ import type { Address, User } from '../../../../../shared/types/user';
 import { useNavigate } from 'react-router-dom';
 import { AUTH_PATHS } from '../../../../auth/route';
 import { updateProfile } from '../../../../../shared/infra/services/profile/profileService';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
+import { formatBackendError } from '../../../../../shared/infra/utils/formatBackendError';
 
 export const useProfileEdit = () => {
   const { user } = useAuth();
   const [profileData, setProfileData] = useState<User>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
   useEffect(() => {
     if (!user) {
       navigate(AUTH_PATHS.SIGNUP);
@@ -36,8 +38,12 @@ export const useProfileEdit = () => {
         bio: profileData?.bio ?? '',
         stack: profileData?.stack ?? [],
       });
+      showNotification('Perfil atualizado com sucesso!', 'success');
     } catch (error) {
-      setError((error as Error).message);
+      showNotification(
+        'Erro ao atualizar o perfil.Error: ' + formatBackendError(error),
+        'error',
+      );
     }
     setLoading(false);
   };
@@ -69,7 +75,7 @@ export const useProfileEdit = () => {
   };
 
   return {
-    state: { profileData, loading, error },
+    state: { profileData, loading },
     actions: { changeProperty, handleReset, handleProfileUpdate },
   };
 };
