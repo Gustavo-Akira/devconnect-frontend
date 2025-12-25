@@ -85,36 +85,4 @@ describe('EditProfilePage', () => {
 
     expect(mockHandleReset).toHaveBeenCalled();
   });
-
-  it('should show error message when state.error is set', () => {
-    (useProfileEdit as Mock).mockReturnValue({
-      actions: {
-        changeProperty: mockChangeProperty,
-        handleProfileUpdate: mockHandleProfileUpdate,
-        handleReset: mockHandleReset,
-      },
-      state: {
-        profileData: {
-          name: '',
-          email: '',
-          githubLink: '',
-          linkedinLink: '',
-          stack: [],
-          bio: '',
-          address: {
-            zipCode: '',
-            street: '',
-            city: '',
-            state: '',
-            country: '',
-          },
-        },
-        error: 'Ocorreu um erro',
-      },
-    });
-
-    render(<EditProfilePage />);
-
-    expect(screen.getByText('Ocorreu um erro')).toBeInTheDocument();
-  });
 });

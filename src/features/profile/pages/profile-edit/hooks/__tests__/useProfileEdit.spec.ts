@@ -18,6 +18,16 @@ vi.mock('react-router-dom', async () => {
     useNavigate: vi.fn(),
   };
 });
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => {
+    return {
+      useNotification: () => ({
+        showNotification: vi.fn(),
+      }),
+    };
+  },
+);
 
 describe('useProfileEdit', () => {
   const mockNavigate = vi.fn();
@@ -116,7 +126,6 @@ describe('useProfileEdit', () => {
     });
 
     expect(updateProfileMock).toHaveBeenCalled();
-    expect(result.current.state.error).toBeUndefined();
     expect(result.current.state.loading).toBe(false);
   });
 
@@ -133,7 +142,6 @@ describe('useProfileEdit', () => {
     });
 
     expect(updateProfileMock).toHaveBeenCalled();
-    expect(result.current.state.error).toBe('Update failed');
     expect(result.current.state.loading).toBe(false);
   });
 });
