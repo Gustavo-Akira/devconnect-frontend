@@ -6,17 +6,34 @@ import {
   Container,
   Tooltip,
   IconButton,
+  Button,
 } from '@mui/material';
 import { useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useProfile } from '../../hooks/useProfile';
+import { useOtherProfilePage } from './hooks/useProfile';
 import { InfoContainer } from '../../components/infoContainer';
 import { GitHub, LinkedIn } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import type { Relation } from '../../../../shared/infra/services/relation/interface';
 
 export const OtherProfilePage = () => {
   const { id } = useParams();
-  const { state, actions } = useProfile(id);
+  const { state, actions } = useOtherProfilePage(id);
+
+  const getRelationStatusText = (relation?: Relation) => {
+    if (!relation) return 'Nenhuma relação';
+
+    switch (relation.Type) {
+      case 'FRIEND':
+        return relation.Status === 'PENDING'
+          ? 'Solicitação Pendente'
+          : 'Já Amigos';
+      case 'BLOCK':
+        return 'Bloqueado';
+      default:
+        return 'Nenhuma relação';
+    }
+  };
 
   type Color =
     | 'primary'
@@ -37,26 +54,36 @@ export const OtherProfilePage = () => {
       [...s].reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % colors.length,
     [colors],
   );
-  const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
-    { field: 'description', headerName: 'Description', flex: 2, minWidth: 250 },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      sortable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <>
+  const columns = useMemo<GridColDef[]>(
+    () => [
+      { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
+      {
+        field: 'description',
+        headerName: 'Description',
+        flex: 2,
+        minWidth: 250,
+      },
+      {
+        field: 'actions',
+        headerName: 'Actions',
+        flex: 1,
+        sortable: false,
+        filterable: false,
+        renderCell: (params) => (
           <Tooltip title="Open Repository">
-            <IconButton href={params.row.repoUrl} target="_blank">
+            <IconButton
+              href={params.row.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <GitHub />
             </IconButton>
           </Tooltip>
-        </>
-      ),
-    },
-  ];
+        ),
+      },
+    ],
+    [],
+  );
 
   const colorMap = useMemo(() => {
     if (!state.profile?.stack) return {} as Record<string, Color>;
@@ -64,10 +91,16 @@ export const OtherProfilePage = () => {
       state.profile.stack.map((s) => [s, colors[hashToIndex(s)]]),
     ) as Record<string, Color>;
   }, [state.profile?.stack, colors, hashToIndex]);
+
+  if (state.loading) {
+    return <Typography>Carregando...</Typography>;
+  }
+
+  if (!state.profile) {
+    return <Typography>Perfil não encontrado</Typography>;
+  }
   return (
     <>
-      {state.loading && <Typography>Carregando...</Typography>}
-      {!state.profile && <Typography>Perfil não encontrado</Typography>}
       {state.profile && (
         <Container style={{ minHeight: '80vh' }}>
           <Grid container spacing={2}>
@@ -77,7 +110,17 @@ export const OtherProfilePage = () => {
                 {state.profile.bio}
               </Typography>
             </Grid>
-
+            <Grid size={{ xs: 12 }}>
+              {state.relation && (
+                <Button
+                  variant="contained"
+                  disabled={state.relation.Status === 'ACCEPTED'}
+                  data-testid="relation-button"
+                >
+                  {getRelationStatusText(state.relation)}
+                </Button>
+              )}
+            </Grid>
             <Grid size={{ xs: 12 }}>
               <InfoContainer
                 label="Stack"
@@ -100,14 +143,14 @@ export const OtherProfilePage = () => {
                       target="_blank"
                       rel="noopener"
                     >
-                      <GitHub />
+                      <GitHub aria-label="GitHub profile" />
                     </Link>
                     <Link
                       href={state.profile.linkedinLink}
                       target="_blank"
                       rel="noopener"
                     >
-                      <LinkedIn />
+                      <LinkedIn aria-label="LinkedIn profile" />
                     </Link>
                   </div>
                 }
@@ -115,6 +158,7 @@ export const OtherProfilePage = () => {
             </Grid>
           </Grid>
           <DataGrid
+            data-testid="projects-grid"
             columns={columns}
             rows={state.projects ? state.projects.content : []}
             paginationMode="server"
@@ -131,6 +175,7 @@ export const OtherProfilePage = () => {
                 actions.handleSizeChange(model.pageSize);
               }
             }}
+            getRowId={(row) => row.id}
             loading={state.loading}
           />
         </Container>

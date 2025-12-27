@@ -17,7 +17,7 @@ export type Relation = {
   TargetId: number;
   FromProfileName: string;
   ToProfileName: string;
-  RelationType: 'FRIEND' | 'BLOCK';
+  Type: 'FRIEND' | 'BLOCK';
   Status: string;
 };
 
