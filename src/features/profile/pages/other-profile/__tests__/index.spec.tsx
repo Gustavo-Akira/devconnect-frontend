@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { OtherProfilePage } from '../index';
-import { useProfile } from '../../../hooks/useProfile';
+import { useOtherProfilePage } from '../hooks/useProfile';
 
-vi.mock('../../../hooks/useProfile', () => ({
-  useProfile: vi.fn(),
+vi.mock('../hooks/useProfile', () => ({
+  useOtherProfilePage: vi.fn(),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -25,7 +25,7 @@ vi.mock('@mui/x-data-grid', () => ({
   ),
 }));
 
-const mockUseProfile = useProfile as Mock;
+const mockUseProfile = useOtherProfilePage as Mock;
 
 describe('OtherProfilePage', () => {
   beforeEach(() => {
@@ -36,6 +36,7 @@ describe('OtherProfilePage', () => {
     mockUseProfile.mockReturnValue({
       state: {
         profile: undefined,
+        relation: undefined,
         loading: true,
         projects: undefined,
         error: null,
@@ -57,6 +58,7 @@ describe('OtherProfilePage', () => {
     mockUseProfile.mockReturnValue({
       state: {
         profile: undefined,
+        relation: undefined,
         loading: false,
         projects: undefined,
         error: null,
@@ -84,6 +86,10 @@ describe('OtherProfilePage', () => {
           githubLink: '',
           linkedinLink: '',
         },
+        relation: {
+          Type: 'FRIEND',
+          Status: 'PENDING',
+        },
         loading: false,
         projects: undefined,
         error: null,
@@ -100,6 +106,7 @@ describe('OtherProfilePage', () => {
 
     expect(screen.getByText('Gustavo')).toBeInTheDocument();
     expect(screen.getByText('Fullstack Developer')).toBeInTheDocument();
+    expect(screen.getByText('Solicitação Pendente')).toBeInTheDocument();
   });
 
   it('should render stack chips', () => {
@@ -111,6 +118,10 @@ describe('OtherProfilePage', () => {
           stack: ['React', 'Node', 'Java'],
           githubLink: '',
           linkedinLink: '',
+        },
+        relation: {
+          Type: 'FRIEND',
+          Status: 'ACCEPTED',
         },
         loading: false,
         projects: undefined,
@@ -141,6 +152,10 @@ describe('OtherProfilePage', () => {
           githubLink: 'https://github.com/test',
           linkedinLink: 'https://linkedin.com/in/test',
         },
+        relation: {
+          Type: 'FRIEND',
+          Status: 'PENDING',
+        },
         loading: false,
         projects: undefined,
         error: null,
@@ -157,7 +172,6 @@ describe('OtherProfilePage', () => {
 
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(2);
-
     expect(links[0]).toHaveAttribute('href', 'https://github.com/test');
     expect(links[1]).toHaveAttribute('href', 'https://linkedin.com/in/test');
   });
@@ -171,6 +185,10 @@ describe('OtherProfilePage', () => {
           stack: [],
           githubLink: '',
           linkedinLink: '',
+        },
+        relation: {
+          Type: 'FRIEND',
+          Status: 'PENDING',
         },
         loading: false,
         projects: {

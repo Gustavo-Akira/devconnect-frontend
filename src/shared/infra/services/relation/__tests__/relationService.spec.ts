@@ -71,7 +71,7 @@ describe('recommendationService test', () => {
           {
             FromId: fromId,
             TargetId: toId,
-            RelationType: 'FRIEND',
+            Type: 'FRIEND',
             Status: 'PENDING',
             FromProfileName: 'akira',
             ToProfileName: 'kira',
@@ -110,7 +110,7 @@ describe('recommendationService test', () => {
       const validReturn: Relation = {
         FromId: fromId,
         TargetId: toId,
-        RelationType: 'BLOCK',
+        Type: 'BLOCK',
         FromProfileName: 'akira',
         ToProfileName: 'kira',
         Status: 'ACCEPTED',
@@ -168,7 +168,7 @@ describe('recommendationService test', () => {
         {
           FromId: 2,
           TargetId: id,
-          RelationType: 'FRIEND',
+          Type: 'FRIEND',
           Status: 'PENDING',
           FromProfileName: 'user2',
           ToProfileName: 'user1',
@@ -198,7 +198,7 @@ describe('recommendationService test', () => {
       const mockRelation: Relation = {
         FromId: fromId,
         TargetId: id,
-        RelationType: 'FRIEND',
+        Type: 'FRIEND',
         Status: 'ACCEPTED',
         FromProfileName: 'user2',
         ToProfileName: 'user1',
@@ -228,7 +228,7 @@ describe('recommendationService test', () => {
       const mockRelation: Relation = {
         FromId: fromId,
         TargetId: toId,
-        RelationType: 'FRIEND',
+        Type: 'FRIEND',
         Status: 'ACCEPTED',
         FromProfileName: 'user1',
         ToProfileName: 'user2',

@@ -40,7 +40,7 @@ describe('useRelationPage', () => {
         TargetId: 2,
         FromProfileName: 'user1',
         ToProfileName: 'user2',
-        RelationType: 'FRIEND',
+        Type: 'FRIEND',
         Status: 'ACCEPTED',
       },
     ],
@@ -68,7 +68,7 @@ describe('useRelationPage', () => {
       TargetId: 2,
       FromProfileName: 'user1',
       ToProfileName: 'user2',
-      RelationType: 'FRIEND',
+      Type: 'FRIEND',
       Status: 'ACCEPTED',
     });
 
@@ -78,7 +78,7 @@ describe('useRelationPage', () => {
       TargetId: 0,
       FromProfileName: '',
       ToProfileName: '',
-      RelationType: 'FRIEND',
+      Type: 'FRIEND',
       Status: '',
     });
   });

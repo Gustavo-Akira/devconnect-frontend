@@ -15,10 +15,6 @@ export const PROFILE_PATHS = {
 
 export const PROFILE_ROUTE: RouteObject[] = [
   {
-    path: PROFILE_PATHS.PROFILE_BY_ID,
-    element: <OtherProfilePage />,
-  },
-  {
     path: PROFILE_PATHS.PROFILE,
     element: (
       <PrivateRoute>
@@ -39,5 +35,13 @@ export const PROFILE_ROUTE: RouteObject[] = [
         element: <ProjectsPage />,
       },
     ],
+  },
+  {
+    path: PROFILE_PATHS.PROFILE_BY_ID,
+    element: (
+      <PrivateRoute>
+        <OtherProfilePage />
+      </PrivateRoute>
+    ),
   },
 ];
