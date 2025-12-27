@@ -220,4 +220,34 @@ describe('recommendationService test', () => {
       await expect(acceptRelationRequest(id, fromId)).rejects.toThrow(error);
     });
   });
+
+  describe('get relation by from id and to id', () => {
+    it('should get relation by from id and to id', async () => {
+      const fromId = 1;
+      const toId = 2;
+      const mockRelation: Relation = {
+        FromId: fromId,
+        TargetId: toId,
+        RelationType: 'FRIEND',
+        Status: 'ACCEPTED',
+        FromProfileName: 'user1',
+        ToProfileName: 'user2',
+      };
+      const mockApiGet = relationApi.get as Mock;
+      mockApiGet.mockResolvedValueOnce({ data: mockRelation });
+
+      const result = await getAllRelationsByUser(fromId, toId);
+      expect(result).toBe(mockRelation);
+    });
+
+    it('should throw error when get returns an error', async () => {
+      const fromId = 1;
+      const toId = 2;
+      const mockApiGet = relationApi.get as Mock;
+      const error = new Error('error');
+      mockApiGet.mockRejectedValueOnce(error);
+
+      await expect(getAllRelationsByUser(fromId, toId)).rejects.toThrow(error);
+    });
+  });
 });
