@@ -4,14 +4,20 @@ import { PrivateRoute } from '../../shared/component/privateRoute';
 import { InfoPage } from './pages/information';
 import { EditProfilePage } from './pages/profile-edit';
 import { ProjectsPage } from './pages/projects';
+import { OtherProfilePage } from './pages/other-profile';
 
 export const PROFILE_PATHS = {
   PROFILE: '/profile',
+  PROFILE_BY_ID: '/profile/:id',
   PROFILE_EDIT: '/profile/edit',
   PROFILE_PROJECTS: '/profile/projects',
 };
 
 export const PROFILE_ROUTE: RouteObject[] = [
+  {
+    path: PROFILE_PATHS.PROFILE_BY_ID,
+    element: <OtherProfilePage />,
+  },
   {
     path: PROFILE_PATHS.PROFILE,
     element: (
