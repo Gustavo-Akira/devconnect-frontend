@@ -93,3 +93,22 @@ export const acceptRelationRequest = async (
     throw error;
   }
 };
+
+export const getRelationByFromIdAndToId = async (
+  fromId: number,
+  toId: number,
+): Promise<Relation> => {
+  try {
+    const { data } = await relationApi.get<Relation>(
+      `/relation/${fromId}/to/${toId}`,
+    );
+    return data;
+  } catch (error) {
+    console.error(
+      'Error getting relation from profile #%d to profile #%d',
+      fromId,
+      toId,
+    );
+    throw error;
+  }
+};
