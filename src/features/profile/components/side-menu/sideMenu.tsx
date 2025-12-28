@@ -30,7 +30,7 @@ export const SideMenu = () => {
           role="img"
           alt="profileImage"
         />
-        <Typography variant="h5">Gustavo Akira Uekita</Typography>
+        <Typography variant="h5">{auth.user?.name}</Typography>
       </SideMenuProfileContainer>
       <SideMenuNavBar>
         <SideMenuLink onClick={() => navigate(PROFILE_PATHS.PROFILE)}>
