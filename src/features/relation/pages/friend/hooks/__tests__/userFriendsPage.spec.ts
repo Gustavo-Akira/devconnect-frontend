@@ -17,6 +17,18 @@ vi.mock(
   }),
 );
 
+const mockShowNotification = vi.fn();
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => {
+    return {
+      useNotification: () => ({
+        showNotification: mockShowNotification,
+      }),
+    };
+  },
+);
+
 vi.mock(
   '../../../../../../shared/infra/services/relation/relationService',
   () => ({
@@ -67,10 +79,13 @@ describe('useFriendsPage', () => {
 
     await waitFor(() => {
       expect(errorSpy).toHaveBeenCalled();
-      expect(result.current.state.error).toBe('Erro ao pegar recomendações');
     });
 
     expect(result.current.state.recommendations.length).toBe(0);
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Erro ao pegar recomendações',
+      'error',
+    );
   });
 
   it('should refetch when user changes', async () => {
@@ -129,7 +144,6 @@ describe('useFriendsPage', () => {
       expect(requestFriendShip).toHaveBeenCalledWith(13, 12);
       expect(result.current.state.recommendations.length).toBe(1);
       expect(result.current.state.recommendations[0].ID).toBe(34);
-      expect(result.current.state.error).toBe('');
       expect(result.current.state.loading).toBe(false);
     });
   });
@@ -155,8 +169,11 @@ describe('useFriendsPage', () => {
     await waitFor(() => {
       expect(requestFriendShip).toHaveBeenCalledWith(13, 55);
       expect(errorSpy).toHaveBeenCalled();
-      expect(result.current.state.error).toBe('Erro ao enviar solicitação');
       expect(result.current.state.recommendations.length).toBe(1);
+      expect(mockShowNotification).toHaveBeenCalledWith(
+        'Erro ao enviar solicitação de amizade',
+        'error',
+      );
     });
   });
 
@@ -181,7 +198,6 @@ describe('useFriendsPage', () => {
       expect(blockUser).toHaveBeenCalledWith(13, 12);
       expect(result.current.state.recommendations.length).toBe(1);
       expect(result.current.state.recommendations[0].ID).toBe(34);
-      expect(result.current.state.error).toBe('');
       expect(result.current.state.loading).toBe(false);
     });
   });
@@ -205,8 +221,11 @@ describe('useFriendsPage', () => {
     await waitFor(() => {
       expect(blockUser).toHaveBeenCalledWith(13, 55);
       expect(errorSpy).toHaveBeenCalled();
-      expect(result.current.state.error).toBe('Erro ao blockear usuario');
       expect(result.current.state.recommendations.length).toBe(1);
+      expect(mockShowNotification).toHaveBeenCalledWith(
+        'Erro ao bloquear usuário',
+        'error',
+      );
     });
   });
 });

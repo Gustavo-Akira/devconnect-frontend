@@ -24,6 +24,17 @@ vi.mock(
   }),
 );
 
+vi.mock(
+  '../../../../../shared/context/notification/notificationContext',
+  () => {
+    return {
+      useNotification: () => ({
+        showNotification: vi.fn(),
+      }),
+    };
+  },
+);
+
 describe('Friends Page Ui tests', () => {
   beforeAll(() => {
     (useAuth as Mock).mockReturnValue({
