@@ -6,9 +6,20 @@ import {
   getAllRelationsByUser,
 } from '../../../../../shared/infra/services/relation/relationService';
 import { RelationPage } from '..';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../../../../../shared/context/auth/authContext');
 vi.mock('../../../../../shared/infra/services/relation/relationService');
+vi.mock(
+  '../../../../../shared/context/notification/notificationContext',
+  () => {
+    return {
+      useNotification: () => ({
+        showNotification: vi.fn(),
+      }),
+    };
+  },
+);
 
 describe('RelationPage', () => {
   beforeEach(() => {
@@ -26,7 +37,11 @@ describe('RelationPage', () => {
       relations: [],
     });
 
-    render(<RelationPage />);
+    render(
+      <MemoryRouter>
+        <RelationPage />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => {
       expect(getAllRelationsByUser).toHaveBeenCalledWith(10, 0);
@@ -54,7 +69,11 @@ describe('RelationPage', () => {
       ],
     });
 
-    render(<RelationPage />);
+    render(
+      <MemoryRouter>
+        <RelationPage />
+      </MemoryRouter>,
+    );
     waitFor(() => {
       expect(screen.getByText('Alice')).toBeInTheDocument();
       expect(screen.getByText('Bruno')).toBeInTheDocument();

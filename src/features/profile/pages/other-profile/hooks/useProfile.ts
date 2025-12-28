@@ -70,7 +70,7 @@ export const useOtherProfilePage = (id?: string) => {
   };
 
   const handleButtonClick = () => {
-    if (!relation || relation === ({} as Relation)) {
+    if (!relation) {
       requestFriendShip(Number(userInfo?.id), Number(id)).then(
         (newRelation) => {
           setRelation(newRelation);

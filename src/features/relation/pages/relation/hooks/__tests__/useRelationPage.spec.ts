@@ -13,6 +13,23 @@ import type { User } from '../../../../../../shared/types/user';
 
 vi.mock('../../../../../../shared/context/auth/authContext');
 vi.mock('../../../../../../shared/infra/services/relation/relationService');
+const mockShowNotification = vi.fn();
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => {
+    return {
+      useNotification: () => ({
+        showNotification: mockShowNotification,
+      }),
+    };
+  },
+);
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  return {
+    useNavigate: () => mockNavigate,
+  };
+});
 
 describe('useRelationPage', () => {
   const mockUser: User = {
@@ -111,17 +128,21 @@ describe('useRelationPage', () => {
     });
 
     expect(blockUser).toHaveBeenCalledOnce();
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Usuário bloqueado com sucesso',
+      'success',
+    );
     expect(blockUser).toHaveBeenCalledWith(1, 2);
   });
 
-  it('should expose profileAction without crashing', async () => {
+  it('should call profileAction and navigate to profile page with id', async () => {
     const { result } = renderHook(() => useRelationPage());
 
     await waitFor(() => {
       expect(result.current.state.loading).toBe(false);
     });
-
-    expect(() => result.current.actions.profileAction(99)).not.toThrow();
+    await waitFor(() => result.current.actions.profileAction(99));
+    expect(mockNavigate).toHaveBeenCalledWith('/profile/99');
   });
 
   it('should change page when handlePageChange is called', async () => {
@@ -160,6 +181,10 @@ describe('useRelationPage', () => {
 
     expect(acceptRelationRequest).toHaveBeenCalledWith(1, 2);
     expect(getAllPendingRelationsByUser).toHaveBeenCalledTimes(2);
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Amizade aceita com sucesso',
+      'success',
+    );
     expect(result.current.state.page).toBe(0);
   });
 });
