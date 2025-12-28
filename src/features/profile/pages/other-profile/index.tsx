@@ -14,26 +14,29 @@ import { useOtherProfilePage } from './hooks/useProfile';
 import { InfoContainer } from '../../components/infoContainer';
 import { GitHub, LinkedIn } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import type { Relation } from '../../../../shared/infra/services/relation/interface';
 
 export const OtherProfilePage = () => {
   const { id } = useParams();
   const { state, actions } = useOtherProfilePage(id);
 
-  const getRelationStatusText = (relation?: Relation) => {
-    if (!relation) return 'Nenhuma relação';
-
-    switch (relation.Type) {
+  const getRelationStatusText = useCallback(() => {
+    if (!state.relation) return 'Adicionar Amigo';
+    switch (state.relation.Type) {
       case 'FRIEND':
-        return relation.Status === 'PENDING'
+        if (
+          Number(state.relation.ToID) === state.loggedId &&
+          state.relation.Status === 'PENDING'
+        ) {
+          return 'Aceitar Solicitação';
+        }
+
+        return state.relation.Status === 'PENDING'
           ? 'Solicitação Pendente'
-          : 'Já Amigos';
+          : 'Bloquear';
       case 'BLOCK':
         return 'Bloqueado';
-      default:
-        return 'Nenhuma relação';
     }
-  };
+  }, [state.relation, state.loggedId]);
 
   type Color =
     | 'primary'
@@ -105,7 +108,7 @@ export const OtherProfilePage = () => {
         <Container style={{ minHeight: '80vh' }}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="h4">{state.profile.name}</Typography>
+              <Typography variant="h4">{state.profile.name} </Typography>
               <Typography color="text.secondary">
                 {state.profile.bio}
               </Typography>
@@ -116,8 +119,15 @@ export const OtherProfilePage = () => {
                   variant="contained"
                   disabled={state.relation.Status === 'ACCEPTED'}
                   data-testid="relation-button"
+                  onClick={actions.handleButtonClick}
                 >
-                  {getRelationStatusText(state.relation)}
+                  {getRelationStatusText()}
+                </Button>
+              )}
+
+              {state.relation === undefined && (
+                <Button variant="contained" onClick={actions.handleButtonClick}>
+                  {getRelationStatusText()}
                 </Button>
               )}
             </Grid>

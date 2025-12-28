@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import type { User } from '../../../../../shared/types/user';
 import { getProfileById } from '../../../../../shared/infra/services/profile/profileService';
 import { getProjectsByDevProfileId } from '../../../../../shared/infra/services/projects/projectService';
-import { getRelationByFromIdAndToId } from '../../../../../shared/infra/services/relation/relationService';
+import {
+  acceptRelationRequest,
+  blockUser,
+  getRelationByFromIdAndToId,
+  requestFriendShip,
+} from '../../../../../shared/infra/services/relation/relationService';
 import type { Relation } from '../../../../../shared/infra/services/relation/interface';
 import type { ProjectResponse } from '../../../../../shared/infra/services/projects/interface';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
@@ -23,7 +28,6 @@ export const useOtherProfilePage = (id?: string) => {
     if (!id) return;
     let mounted = true;
     setLoading(true);
-    console.log('Fetching data for profile id:', userInfo?.id, id);
     const promises: Promise<unknown>[] = [
       getProjectsByDevProfileId(id, page, size),
       getProfileById(id),
@@ -62,11 +66,54 @@ export const useOtherProfilePage = (id?: string) => {
     setPage(0);
   };
 
+  const handleButtonClick = () => {
+    if (!relation || relation === ({} as Relation)) {
+      requestFriendShip(Number(userInfo?.id), Number(id)).then(
+        (newRelation) => {
+          setRelation(newRelation);
+        },
+      );
+    } else {
+      if (relation.Type === 'BLOCK') {
+        return;
+      }
+      switch (relation?.Status) {
+        case 'PENDING':
+          if (relation.ToID !== Number(userInfo?.id)) {
+            return;
+          }
+          acceptRelationRequest(Number(userInfo?.id), Number(id)).then(() => {
+            setRelation((prev) =>
+              prev ? { ...prev, Status: 'ACCEPTED' } : prev,
+            );
+          });
+          break;
+        case 'ACCEPTED':
+          blockUser(Number(userInfo?.id), Number(id)).then(
+            (blockedRelation) => {
+              setRelation(blockedRelation);
+            },
+          );
+          break;
+      }
+    }
+  };
+
   return {
-    state: { profile, projects, loading, error, page, size, relation },
+    state: {
+      profile,
+      projects,
+      loading,
+      error,
+      page,
+      size,
+      relation,
+      loggedId: Number(userInfo?.id),
+    },
     actions: {
       handlePageChange,
       handleSizeChange,
+      handleButtonClick,
     },
   } as const;
 };

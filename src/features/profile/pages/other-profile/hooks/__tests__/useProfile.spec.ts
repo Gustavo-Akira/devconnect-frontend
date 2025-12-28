@@ -7,7 +7,12 @@ import type { Relation } from '../../../../../../shared/infra/services/relation/
 
 import { getProfileById } from '../../../../../../shared/infra/services/profile/profileService';
 import { getProjectsByDevProfileId } from '../../../../../../shared/infra/services/projects/projectService';
-import { getRelationByFromIdAndToId } from '../../../../../../shared/infra/services/relation/relationService';
+import {
+  acceptRelationRequest,
+  blockUser,
+  getRelationByFromIdAndToId,
+  requestFriendShip,
+} from '../../../../../../shared/infra/services/relation/relationService';
 import { useAuth } from '../../../../../../shared/context/auth/authContext';
 
 vi.mock(
@@ -28,6 +33,9 @@ vi.mock(
   '../../../../../../shared/infra/services/relation/relationService',
   () => ({
     getRelationByFromIdAndToId: vi.fn(),
+    requestFriendShip: vi.fn(),
+    acceptRelationRequest: vi.fn(),
+    blockUser: vi.fn(),
   }),
 );
 
@@ -39,6 +47,9 @@ const mockedGetProfileById = vi.mocked(getProfileById);
 const mockedGetProjectsByDevProfileId = vi.mocked(getProjectsByDevProfileId);
 const mockedGetRelationByFromIdAndToId = vi.mocked(getRelationByFromIdAndToId);
 const mockedUseAuth = vi.mocked(useAuth);
+const mockedRequestFriendShip = vi.mocked(requestFriendShip);
+const mockedAcceptRelationRequest = vi.mocked(acceptRelationRequest);
+const mockedBlockUser = vi.mocked(blockUser);
 
 describe('useOtherProfilePage', () => {
   const authUser = { id: '10' } as User;
@@ -83,7 +94,7 @@ describe('useOtherProfilePage', () => {
 
     const mockRelation: Relation = {
       FromId: 10,
-      TargetId: 1,
+      ToID: 1,
       Type: 'FRIEND',
       Status: 'ACCEPTED',
       FromProfileName: 'authUser',
@@ -201,5 +212,121 @@ describe('useOtherProfilePage', () => {
     } as User);
 
     await Promise.resolve();
+  });
+  describe('Relation Actions', () => {
+    it('should request friendship when relation is undefined', async () => {
+      mockedGetProfileById.mockResolvedValue({} as User);
+      mockedGetProjectsByDevProfileId.mockResolvedValue({} as ProjectResponse);
+      mockedGetRelationByFromIdAndToId.mockResolvedValue(
+        undefined as unknown as Relation,
+      );
+
+      const newRelation = {
+        FromId: 10,
+        ToID: 1,
+        Status: 'PENDING',
+        Type: 'FRIEND',
+      } as Relation;
+
+      mockedRequestFriendShip.mockResolvedValueOnce(newRelation);
+
+      const { result } = renderHook(() => useOtherProfilePage('1'));
+
+      await waitFor(() => {
+        expect(result.current.state.loading).toBe(false);
+      });
+
+      await act(async () => {
+        result.current.actions.handleButtonClick();
+      });
+
+      expect(mockedRequestFriendShip).toHaveBeenCalledWith(10, 1);
+      expect(result.current.state.relation).toEqual(newRelation);
+    });
+    it('should accept relation request when status is PENDING and user is target', async () => {
+      const pendingRelation: Relation = {
+        FromId: 1,
+        ToID: 10,
+        Status: 'PENDING',
+        Type: 'FRIEND',
+      } as Relation;
+
+      mockedGetProfileById.mockResolvedValue({} as User);
+      mockedGetProjectsByDevProfileId.mockResolvedValue({} as ProjectResponse);
+      mockedGetRelationByFromIdAndToId.mockResolvedValue(pendingRelation);
+
+      mockedAcceptRelationRequest.mockResolvedValueOnce({} as Relation);
+
+      const { result } = renderHook(() => useOtherProfilePage('1'));
+
+      await waitFor(() => {
+        expect(result.current.state.relation).toEqual(pendingRelation);
+      });
+
+      await act(async () => {
+        result.current.actions.handleButtonClick();
+      });
+
+      expect(mockedAcceptRelationRequest).toHaveBeenCalledWith(10, 1);
+      expect(result.current.state.relation?.Status).toBe('ACCEPTED');
+    });
+
+    it('should block user when relation is ACCEPTED', async () => {
+      const acceptedRelation: Relation = {
+        FromId: 10,
+        ToID: 1,
+        Status: 'ACCEPTED',
+        Type: 'FRIEND',
+      } as Relation;
+
+      const blockedRelation: Relation = {
+        ...acceptedRelation,
+        Type: 'BLOCK',
+      };
+
+      mockedGetProfileById.mockResolvedValue({} as User);
+      mockedGetProjectsByDevProfileId.mockResolvedValue({} as ProjectResponse);
+      mockedGetRelationByFromIdAndToId.mockResolvedValue(acceptedRelation);
+      mockedBlockUser.mockResolvedValueOnce(blockedRelation);
+
+      const { result } = renderHook(() => useOtherProfilePage('1'));
+
+      await waitFor(() => {
+        expect(result.current.state.relation).toEqual(acceptedRelation);
+      });
+
+      await act(async () => {
+        result.current.actions.handleButtonClick();
+      });
+
+      expect(mockedBlockUser).toHaveBeenCalledWith(10, 1);
+      expect(result.current.state.relation).toEqual(blockedRelation);
+    });
+    it('should do nothing when relation type is BLOCK', async () => {
+      const blockedRelation: Relation = {
+        FromId: 10,
+        ToID: 1,
+        Status: 'ACCEPTED',
+        Type: 'BLOCK',
+      } as Relation;
+
+      mockedGetProfileById.mockResolvedValue({} as User);
+      mockedGetProjectsByDevProfileId.mockResolvedValue({} as ProjectResponse);
+      mockedGetRelationByFromIdAndToId.mockResolvedValue(blockedRelation);
+
+      const { result } = renderHook(() => useOtherProfilePage('1'));
+
+      await waitFor(() => {
+        expect(result.current.state.relation).toEqual(blockedRelation);
+      });
+
+      act(() => {
+        result.current.actions.handleButtonClick();
+      });
+
+      expect(mockedBlockUser).not.toHaveBeenCalled();
+      expect(mockedAcceptRelationRequest).not.toHaveBeenCalled();
+      expect(mockedRequestFriendShip).not.toHaveBeenCalled();
+    });
   });
 });
