@@ -6,15 +6,15 @@ import {
   getRecommendationsByProfile,
   requestFriendShip,
 } from '../../../../../shared/infra/services/relation/relationService';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
 
 export const useFriendsPage = () => {
   const { user } = useAuth();
+  const { showNotification } = useNotification();
   const [recommendations, setRecommendations] = useState<Recommendations[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
   const fetchRecommendations = useCallback(async () => {
     const userId = Number.parseInt(user!.id);
-    setError('');
     setLoading(true);
     getRecommendationsByProfile(userId)
       .then((data) => {
@@ -23,12 +23,12 @@ export const useFriendsPage = () => {
       })
       .catch((error) => {
         console.error(error);
-        setError('Erro ao pegar recomendações');
+        showNotification('Erro ao pegar recomendações', 'error');
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [user]);
+  }, [user, showNotification]);
   useEffect(() => {
     fetchRecommendations();
   }, [fetchRecommendations]);
@@ -44,16 +44,17 @@ export const useFriendsPage = () => {
               (recommendation) => recommendation.ID != toId,
             ),
           );
+          showNotification('Solicitação de amizade enviada', 'success');
         })
         .catch((err) => {
           console.error(err);
-          setError('Erro ao enviar solicitação');
+          showNotification('Erro ao enviar solicitação de amizade', 'error');
         })
         .finally(() => {
           setLoading(false);
         });
     },
-    [user, recommendations],
+    [user, recommendations, showNotification],
   );
 
   const blockUserAction = useCallback(
@@ -67,23 +68,23 @@ export const useFriendsPage = () => {
               (recommendation) => recommendation.ID != toId,
             ),
           );
+          showNotification('Usuário blockeado com sucesso', 'success');
         })
         .catch((err) => {
           console.error(err);
-          setError('Erro ao blockear usuario');
+          showNotification('Erro ao bloquear usuário', 'error');
         })
         .finally(() => {
           setLoading(false);
         });
     },
-    [user, recommendations],
+    [user, recommendations, showNotification],
   );
 
   return {
     state: {
       recommendations,
       loading,
-      error,
     },
     actions: {
       fetchRecommendations,

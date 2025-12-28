@@ -1,20 +1,12 @@
-import {
-  Container,
-  Grid,
-  Skeleton,
-  Typography,
-  Box,
-  Snackbar,
-  Alert,
-} from '@mui/material';
+import { Container, Grid, Skeleton, Typography, Box } from '@mui/material';
 import { useFriendsPage } from './hooks/useFriendsPage';
 import { ProfileCard } from '../../components/profile-card/profileCard';
 
 export const FriendsPage = () => {
   const { state, actions } = useFriendsPage();
 
-  const { loading, error, recommendations } = state;
-  const { fetchRecommendations, addFriendShip, blockUserAction } = actions;
+  const { loading, recommendations } = state;
+  const { addFriendShip, blockUserAction } = actions;
   return (
     <Container sx={{ py: 4 }}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
@@ -42,14 +34,6 @@ export const FriendsPage = () => {
         <Typography variant="body1" sx={{ mt: 4 }} color="text.secondary">
           Nenhuma recomendação encontrada no momento.
         </Typography>
-      )}
-
-      {error && (
-        <Snackbar color="error" open={true} onClose={fetchRecommendations}>
-          <Alert severity="error" onClose={fetchRecommendations}>
-            {error}
-          </Alert>
-        </Snackbar>
       )}
 
       {!loading && recommendations.length > 0 && (
