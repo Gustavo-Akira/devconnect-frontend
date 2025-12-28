@@ -11,6 +11,7 @@ import {
 import type { Relation } from '../../../../../shared/infra/services/relation/interface';
 import type { ProjectResponse } from '../../../../../shared/infra/services/projects/interface';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
 
 export const useOtherProfilePage = (id?: string) => {
   const [profile, setProfile] = useState<User | undefined>(undefined);
@@ -24,6 +25,8 @@ export const useOtherProfilePage = (id?: string) => {
   const userInfo = user!;
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<number>(20);
+
+  const { showNotification } = useNotification();
   useEffect(() => {
     if (!id) return;
     let mounted = true;
@@ -71,6 +74,7 @@ export const useOtherProfilePage = (id?: string) => {
       requestFriendShip(Number(userInfo?.id), Number(id)).then(
         (newRelation) => {
           setRelation(newRelation);
+          showNotification('Pedido de amizade enviado.', 'success');
         },
       );
     } else {
@@ -80,18 +84,21 @@ export const useOtherProfilePage = (id?: string) => {
       switch (relation?.Status) {
         case 'PENDING':
           if (relation.ToID !== Number(userInfo?.id)) {
+            showNotification('Pedido de amizade já enviado.', 'error');
             return;
           }
           acceptRelationRequest(Number(userInfo?.id), Number(id)).then(() => {
             setRelation((prev) =>
               prev ? { ...prev, Status: 'ACCEPTED' } : prev,
             );
+            showNotification('Pedido de amizade aceito.', 'success');
           });
           break;
         case 'ACCEPTED':
           blockUser(Number(userInfo?.id), Number(id)).then(
             (blockedRelation) => {
               setRelation(blockedRelation);
+              showNotification('Usuário bloqueado.', 'success');
             },
           );
           break;
