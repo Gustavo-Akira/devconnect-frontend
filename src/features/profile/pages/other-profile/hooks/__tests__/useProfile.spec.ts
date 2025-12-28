@@ -43,6 +43,17 @@ vi.mock('../../../../../../shared/context/auth/authContext', () => ({
   useAuth: vi.fn(),
 }));
 
+const mockShowNotification = vi.fn();
+
+vi.mock(
+  '../../../../../../shared/context/notification/notificationContext',
+  () => ({
+    useNotification: () => ({
+      showNotification: mockShowNotification,
+    }),
+  }),
+);
+
 const mockedGetProfileById = vi.mocked(getProfileById);
 const mockedGetProjectsByDevProfileId = vi.mocked(getProjectsByDevProfileId);
 const mockedGetRelationByFromIdAndToId = vi.mocked(getRelationByFromIdAndToId);
@@ -239,6 +250,7 @@ describe('useOtherProfilePage', () => {
       await act(async () => {
         result.current.actions.handleButtonClick();
       });
+      expect(mockShowNotification).toHaveBeenCalled();
 
       expect(mockedRequestFriendShip).toHaveBeenCalledWith(10, 1);
       expect(result.current.state.relation).toEqual(newRelation);
@@ -266,7 +278,7 @@ describe('useOtherProfilePage', () => {
       await act(async () => {
         result.current.actions.handleButtonClick();
       });
-
+      expect(mockShowNotification).toHaveBeenCalled();
       expect(mockedAcceptRelationRequest).toHaveBeenCalledWith(10, 1);
       expect(result.current.state.relation?.Status).toBe('ACCEPTED');
     });
@@ -298,7 +310,7 @@ describe('useOtherProfilePage', () => {
       await act(async () => {
         result.current.actions.handleButtonClick();
       });
-
+      expect(mockShowNotification).toHaveBeenCalled();
       expect(mockedBlockUser).toHaveBeenCalledWith(10, 1);
       expect(result.current.state.relation).toEqual(blockedRelation);
     });
