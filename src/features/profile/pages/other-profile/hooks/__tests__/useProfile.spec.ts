@@ -7,7 +7,12 @@ import type { Relation } from '../../../../../../shared/infra/services/relation/
 
 import { getProfileById } from '../../../../../../shared/infra/services/profile/profileService';
 import { getProjectsByDevProfileId } from '../../../../../../shared/infra/services/projects/projectService';
-import { acceptRelationRequest, blockUser, getRelationByFromIdAndToId, requestFriendShip } from '../../../../../../shared/infra/services/relation/relationService';
+import {
+  acceptRelationRequest,
+  blockUser,
+  getRelationByFromIdAndToId,
+  requestFriendShip,
+} from '../../../../../../shared/infra/services/relation/relationService';
 import { useAuth } from '../../../../../../shared/context/auth/authContext';
 
 vi.mock(
@@ -212,7 +217,9 @@ describe('useOtherProfilePage', () => {
     it('should request friendship when relation is undefined', async () => {
       mockedGetProfileById.mockResolvedValue({} as User);
       mockedGetProjectsByDevProfileId.mockResolvedValue({} as ProjectResponse);
-      mockedGetRelationByFromIdAndToId.mockResolvedValue(undefined as unknown as Relation);
+      mockedGetRelationByFromIdAndToId.mockResolvedValue(
+        undefined as unknown as Relation,
+      );
 
       const newRelation = {
         FromId: 10,

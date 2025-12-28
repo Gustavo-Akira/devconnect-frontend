@@ -23,7 +23,10 @@ export const OtherProfilePage = () => {
     if (!state.relation) return 'Adicionar Amigo';
     switch (state.relation.Type) {
       case 'FRIEND':
-        if (Number(state.relation.ToID) === state.loggedId && state.relation.Status === 'PENDING') {
+        if (
+          Number(state.relation.ToID) === state.loggedId &&
+          state.relation.Status === 'PENDING'
+        ) {
           return 'Aceitar Solicitação';
         }
 
@@ -33,7 +36,7 @@ export const OtherProfilePage = () => {
       case 'BLOCK':
         return 'Bloqueado';
     }
-  },[state.relation, state.loggedId]);
+  }, [state.relation, state.loggedId]);
 
   type Color =
     | 'primary'
@@ -123,10 +126,7 @@ export const OtherProfilePage = () => {
               )}
 
               {state.relation === undefined && (
-                <Button
-                  variant="contained"
-                  onClick={actions.handleButtonClick}
-                >
+                <Button variant="contained" onClick={actions.handleButtonClick}>
                   {getRelationStatusText()}
                 </Button>
               )}

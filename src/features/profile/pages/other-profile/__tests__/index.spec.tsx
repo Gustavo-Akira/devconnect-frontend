@@ -16,9 +16,9 @@ vi.mock('react-router-dom', async () => {
 });
 
 vi.mock('@mui/x-data-grid', () => ({
-  DataGrid: ({ rows }: { rows: any[] }) => (
+  DataGrid: ({ rows }: { rows: [] }) => (
     <div data-testid="data-grid">
-      {rows.map((row) => (
+      {rows.map((row: { id: string; name: string }) => (
         <div key={row.id}>{row.name}</div>
       ))}
     </div>

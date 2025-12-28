@@ -37,7 +37,7 @@ describe('useRelationPage', () => {
     Data: [
       {
         FromId: 1,
-        TargetId: 2,
+        ToID: 2,
         FromProfileName: 'user1',
         ToProfileName: 'user2',
         Type: 'FRIEND',
@@ -65,7 +65,7 @@ describe('useRelationPage', () => {
     vi.mocked(getAllRelationsByUser).mockResolvedValue(mockRelations);
     vi.mocked(blockUser).mockResolvedValue({
       FromId: 1,
-      TargetId: 2,
+      ToID: 2,
       FromProfileName: 'user1',
       ToProfileName: 'user2',
       Type: 'FRIEND',
@@ -75,7 +75,7 @@ describe('useRelationPage', () => {
     vi.mocked(getAllPendingRelationsByUser).mockResolvedValue([]);
     vi.mocked(acceptRelationRequest).mockResolvedValue({
       FromId: 0,
-      TargetId: 0,
+      ToID: 0,
       FromProfileName: '',
       ToProfileName: '',
       Type: 'FRIEND',
