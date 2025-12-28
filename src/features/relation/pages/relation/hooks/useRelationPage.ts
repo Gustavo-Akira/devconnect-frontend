@@ -10,13 +10,17 @@ import {
   acceptRelationRequest,
 } from '../../../../../shared/infra/services/relation/relationService';
 import { useAuth } from '../../../../../shared/context/auth/authContext';
+import { useNotification } from '../../../../../shared/context/notification/notificationContext';
+import { useNavigate } from 'react-router-dom';
 
 export const useRelationPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [relations, setRelations] = useState<RelationsResponse>();
   const [loading, setLoading] = useState<boolean>();
   const [page, setPage] = useState<number>(0);
   const [pendingRequests, setPendingRequests] = useState<Relation[]>();
+  const { showNotification } = useNotification();
   useEffect(() => {
     const userId = Number.parseInt(user!.id);
     setLoading(true);
@@ -47,6 +51,7 @@ export const useRelationPage = () => {
     const userId = Number.parseInt(user!.id);
     acceptRelationRequest(userId, id).then(() => {
       fetchPendingRequests();
+      showNotification('Amizade aceita com sucesso', 'success');
       setPage(0);
     });
   };
@@ -54,12 +59,15 @@ export const useRelationPage = () => {
   const blockAction = useCallback(
     (id: number) => {
       const userId = parseInt(user!.id);
-      blockUser(userId, id).then(() => {});
+      blockUser(userId, id).then(() => {
+        setPage(0);
+        showNotification('Usuário bloqueado com sucesso', 'success');
+      });
     },
-    [user],
+    [user, showNotification],
   );
   const profileAction = (id: number) => {
-    console.log(id);
+    navigate(`/profile/${id}`);
   };
 
   const handlePageChange = (newPage: number) => {
