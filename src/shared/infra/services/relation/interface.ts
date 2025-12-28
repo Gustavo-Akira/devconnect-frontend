@@ -14,7 +14,7 @@ export type RelationRequest = {
 
 export type Relation = {
   FromId: number;
-  TargetId: number;
+  ToID: number;
   FromProfileName: string;
   ToProfileName: string;
   Type: 'FRIEND' | 'BLOCK';

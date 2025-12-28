@@ -70,7 +70,7 @@ describe('recommendationService test', () => {
         Data: [
           {
             FromId: fromId,
-            TargetId: toId,
+            ToID: toId,
             Type: 'FRIEND',
             Status: 'PENDING',
             FromProfileName: 'akira',
@@ -109,7 +109,7 @@ describe('recommendationService test', () => {
       const mockApiPost = relationApi.post as Mock;
       const validReturn: Relation = {
         FromId: fromId,
-        TargetId: toId,
+        ToID: toId,
         Type: 'BLOCK',
         FromProfileName: 'akira',
         ToProfileName: 'kira',
@@ -167,7 +167,7 @@ describe('recommendationService test', () => {
       const mockRelations: Relation[] = [
         {
           FromId: 2,
-          TargetId: id,
+          ToID: id,
           Type: 'FRIEND',
           Status: 'PENDING',
           FromProfileName: 'user2',
@@ -197,7 +197,7 @@ describe('recommendationService test', () => {
       const fromId = 2;
       const mockRelation: Relation = {
         FromId: fromId,
-        TargetId: id,
+        ToID: id,
         Type: 'FRIEND',
         Status: 'ACCEPTED',
         FromProfileName: 'user2',
@@ -227,7 +227,7 @@ describe('recommendationService test', () => {
       const toId = 2;
       const mockRelation: Relation = {
         FromId: fromId,
-        TargetId: toId,
+        ToID: toId,
         Type: 'FRIEND',
         Status: 'ACCEPTED',
         FromProfileName: 'user1',

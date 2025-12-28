@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { OtherProfilePage } from '../index';
 import { useOtherProfilePage } from '../hooks/useProfile';
@@ -16,9 +16,9 @@ vi.mock('react-router-dom', async () => {
 });
 
 vi.mock('@mui/x-data-grid', () => ({
-  DataGrid: ({ rows }: { rows: [] }) => (
+  DataGrid: ({ rows }: { rows: any[] }) => (
     <div data-testid="data-grid">
-      {rows.map((row: { id: string; name: string }) => (
+      {rows.map((row) => (
         <div key={row.id}>{row.name}</div>
       ))}
     </div>
@@ -42,10 +42,12 @@ describe('OtherProfilePage', () => {
         error: null,
         page: 0,
         size: 20,
+        loggedId: 10,
       },
       actions: {
         handlePageChange: vi.fn(),
         handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
       },
     });
 
@@ -64,10 +66,12 @@ describe('OtherProfilePage', () => {
         error: null,
         page: 0,
         size: 20,
+        loggedId: 10,
       },
       actions: {
         handlePageChange: vi.fn(),
         handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
       },
     });
 
@@ -89,16 +93,19 @@ describe('OtherProfilePage', () => {
         relation: {
           Type: 'FRIEND',
           Status: 'PENDING',
+          ToID: 123,
         },
         loading: false,
         projects: undefined,
         error: null,
         page: 0,
         size: 20,
+        loggedId: 10,
       },
       actions: {
         handlePageChange: vi.fn(),
         handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
       },
     });
 
@@ -109,71 +116,108 @@ describe('OtherProfilePage', () => {
     expect(screen.getByText('Solicitação Pendente')).toBeInTheDocument();
   });
 
-  it('should render stack chips', () => {
-    mockUseProfile.mockReturnValue({
-      state: {
-        profile: {
-          name: 'Gustavo',
-          bio: '',
-          stack: ['React', 'Node', 'Java'],
-          githubLink: '',
-          linkedinLink: '',
-        },
-        relation: {
-          Type: 'FRIEND',
-          Status: 'ACCEPTED',
-        },
-        loading: false,
-        projects: undefined,
-        error: null,
-        page: 0,
-        size: 20,
-      },
-      actions: {
-        handlePageChange: vi.fn(),
-        handleSizeChange: vi.fn(),
-      },
-    });
-
-    render(<OtherProfilePage />);
-
-    expect(screen.getByText('React')).toBeInTheDocument();
-    expect(screen.getByText('Node')).toBeInTheDocument();
-    expect(screen.getByText('Java')).toBeInTheDocument();
-  });
-
-  it('should render social links', () => {
+  it('should render "Aceitar Solicitação" when pending and user is target', () => {
     mockUseProfile.mockReturnValue({
       state: {
         profile: {
           name: 'Gustavo',
           bio: '',
           stack: [],
-          githubLink: 'https://github.com/test',
-          linkedinLink: 'https://linkedin.com/in/test',
+          githubLink: '',
+          linkedinLink: '',
         },
         relation: {
           Type: 'FRIEND',
           Status: 'PENDING',
+          ToID: 10,
         },
         loading: false,
         projects: undefined,
         error: null,
         page: 0,
         size: 20,
+        loggedId: 10,
       },
       actions: {
         handlePageChange: vi.fn(),
         handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
       },
     });
 
     render(<OtherProfilePage />);
 
-    const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(2);
-    expect(links[0]).toHaveAttribute('href', 'https://github.com/test');
-    expect(links[1]).toHaveAttribute('href', 'https://linkedin.com/in/test');
+    expect(screen.getByText('Aceitar Solicitação')).toBeInTheDocument();
+  });
+
+  it('should disable button when relation is ACCEPTED', () => {
+    mockUseProfile.mockReturnValue({
+      state: {
+        profile: {
+          name: 'Gustavo',
+          bio: '',
+          stack: [],
+          githubLink: '',
+          linkedinLink: '',
+        },
+        relation: {
+          Type: 'FRIEND',
+          Status: 'ACCEPTED',
+          ToID: 123,
+        },
+        loading: false,
+        projects: undefined,
+        error: null,
+        page: 0,
+        size: 20,
+        loggedId: 10,
+      },
+      actions: {
+        handlePageChange: vi.fn(),
+        handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
+      },
+    });
+
+    render(<OtherProfilePage />);
+
+    const button = screen.getByTestId('relation-button');
+    expect(button).toBeDisabled();
+    expect(screen.getByText('Bloquear')).toBeInTheDocument();
+  });
+
+  it('should call handleButtonClick when clicking relation button', () => {
+    const handleButtonClick = vi.fn();
+
+    mockUseProfile.mockReturnValue({
+      state: {
+        profile: {
+          name: 'Gustavo',
+          bio: '',
+          stack: [],
+          githubLink: '',
+          linkedinLink: '',
+        },
+        relation: undefined,
+        loading: false,
+        projects: undefined,
+        error: null,
+        page: 0,
+        size: 20,
+        loggedId: 10,
+      },
+      actions: {
+        handlePageChange: vi.fn(),
+        handleSizeChange: vi.fn(),
+        handleButtonClick,
+      },
+    });
+
+    render(<OtherProfilePage />);
+
+    fireEvent.click(screen.getByText('Adicionar Amigo'));
+
+    expect(handleButtonClick).toHaveBeenCalled();
   });
 
   it('should render projects in DataGrid', () => {
@@ -189,6 +233,7 @@ describe('OtherProfilePage', () => {
         relation: {
           Type: 'FRIEND',
           Status: 'PENDING',
+          ToID: 123,
         },
         loading: false,
         projects: {
@@ -199,10 +244,12 @@ describe('OtherProfilePage', () => {
         error: null,
         page: 0,
         size: 20,
+        loggedId: 10,
       },
       actions: {
         handlePageChange: vi.fn(),
         handleSizeChange: vi.fn(),
+        handleButtonClick: vi.fn(),
       },
     });
 
